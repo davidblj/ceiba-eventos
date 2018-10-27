@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="HydraSettings">
+    <option name="hydraStorePath" value="$PROJECT_DIR$/.hydra/idea" />
+    <option name="noOfCores" value="2" />
+    <option name="projectRoot" value="$PROJECT_DIR$" />
+    <option name="sourcePartitioner" value="auto" />
+  </component>
   <component name="InspectionProjectProfileManager">
     <profile version="1.0">
       <option name="myName" value="Project Default" />
@@ -11,7 +17,7 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/eventos.iml" filepath="$PROJECT_DIR$/eventos.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/eventos.iml" filepath="$PROJECT_DIR$/.idea/modules/eventos.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/root-build.iml" filepath="$PROJECT_DIR$/.idea/modules/root-build.iml" />
     </modules>
   </component>
@@ -19,7 +25,8 @@
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="ScalaCompilerConfiguration">
-    <profile name="sbt 1" modules="eventos">
+    <profile name="sbt 1" modules="ceiba-eventos_8571" />
+    <profile name="sbt 2" modules="eventos">
       <option name="deprecationWarnings" value="true" />
       <option name="uncheckedWarnings" value="true" />
       <parameters>
@@ -40,11 +47,12 @@
           </set>
         </option>
         <option name="sbtVersion" value="1.2.1" />
+        <option name="useSbtShell" value="true" />
       </SbtProjectSettings>
     </option>
   </component>
   <component name="VcsDirectoryMappings">
-    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="" vcs="Git" />
   </component>
   <component name="libraryTable">
     <library name="sbt: aopalliance:aopalliance:1.0:jar">
