@@ -1,4 +1,4 @@
-package infrastructure.mysql.entities
+package infrastructure.slick.entities
 
 import slick.jdbc.MySQLProfile.api._
 
