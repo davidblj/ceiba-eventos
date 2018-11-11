@@ -1,7 +1,7 @@
 package domain.models
 
 case class Event(name: String,
-                 description: String,
-                 id: Option[Int] = None,
-                 resources: Option[Resources] = None,
-                 inputs: Option[Inputs] = None)
+                 description: Option[String] = None,
+                 resources: Option[List[Resource]] = None,
+                 inputs: Option[List[Input]] = None,
+                 id: Int = 0)

@@ -1,5 +1,5 @@
 package domain.models
 
-class Inputs {
+class Input {
 
 }
