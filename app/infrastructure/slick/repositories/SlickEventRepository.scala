@@ -10,7 +10,6 @@ import slick.jdbc.JdbcProfile
 
 import scala.concurrent.{ExecutionContext, Future}
 
-// todo: insertResource and insertInput, should not use option values
 class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvider)
                                      (implicit ec: ExecutionContext)
                                      extends HasDatabaseConfigProvider[JdbcProfile] with EventRepository {
@@ -20,41 +19,41 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
   val resourceTable = TableQuery[ResourceTable]
   val inputTable = TableQuery[InputTable]
 
-  @Override def createEvent(event: Event): Future[Int] = {
+  @Override def insertEvent(event: Event): Future[Int] = {
+
+    def insertInputsHandler(): Future[Any] = {
+
+      if (event.inputs.isDefined) insertInputs(event.inputs.get)
+      else Future.successful(None)
+    }
+
+    def createEvent(event: Event): Future[Event] = {
+
+      val eventTableObject = EventTableObject(name = event.name, description = event.description)
+      val query = eventTable returning eventTable.map(e => e.id) += eventTableObject
+      db.run(query).map(id => event.setId(id))
+    }
 
     for {
-      event <- insertEvent(event)
+      event <- createEvent(event)
       _ <- insertResources(event.resources)
-      _ <- insertInputs(event.inputs)
+      _ <- insertInputsHandler()
     } yield event.eventId.get
   }
 
-  private def insertEvent(event: Event): Future[Event] = {
-    val query = eventTable returning eventTable.map(e => e.id) += EventTableObject(name = event.name, description = event.description)
-    db.run(query).map(id => event.setId(id))
-  }
-
-  private def insertResources(resources: Option[List[Resource]]): Future[Any] = {
+  def insertResources(resources: List[Resource]): Future[Any] = {
 
     // todo: validate the event id
-    if (resources.isDefined) {
-
-      val resourceTableSeq: Seq[ResourceTableObject] = ResourceTransformer.toTableObjectList(resources.get)
-      val query = resourceTable ++= resourceTableSeq
-      db.run(query)
-
-    } else Future { 0 }
+    val resourceTableSeq: Seq[ResourceTableObject] = ResourceTransformer.toTableObjectList(resources)
+    val query = resourceTable ++= resourceTableSeq
+    db.run(query)
   }
 
-  private def insertInputs(inputs: Option[List[Input]]): Future[Any] = {
+  def insertInputs(inputs: List[Input]): Future[Any] = {
 
     // todo: validate the event id
-    if (inputs.isDefined) {
-
-      val inputTableSeq = InputTransformer.toTableObjectList(inputs.get)
-      val query = inputTable ++= inputTableSeq
-      db.run(query)
-
-    } else Future { 0 }
+    val inputTableSeq = InputTransformer.toTableObjectList(inputs)
+    val query = inputTable ++= inputTableSeq
+    db.run(query)
   }
 }

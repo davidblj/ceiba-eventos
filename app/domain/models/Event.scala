@@ -1,17 +1,17 @@
 package domain.models
 
 case class Event(name: String,
+                 resources: List[Resource],
                  description: Option[String] = None,
-                 resources: Option[List[Resource]] = None,
                  inputs: Option[List[Input]] = None,
                  eventId: Option[Int] = None) {
 
   def setId(id: Int): Event = {
 
     // todo: throw if id is not set to None
-    def setResourcesId(): Option[List[Resource]] = {
-      if (resources.isDefined) Some(resources.get.map(resource => resource.setId(id)))
-      else None
+
+    def setResourcesId(): List[Resource] = {
+      resources.map(resource => resource.setId(id))
     }
 
     def setInputsId(): Option[List[Input]] = {
@@ -21,6 +21,6 @@ case class Event(name: String,
 
     val updatedResources = setResourcesId()
     val updatedInputs = setInputsId()
-    Event(name, description, updatedResources, updatedInputs, Some(id))
+    Event(name, updatedResources, description, updatedInputs, Some(id))
   }
 }

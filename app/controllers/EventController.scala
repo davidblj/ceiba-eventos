@@ -19,7 +19,7 @@ class EventController @Inject()(cc: ControllerComponents, createEvent: CreateEve
       val resourceList = List(Resource("test resource", 0, Some("description"), Some(0)))
       val inputList = List(Input("test input", 0, Some("description")))
       val event = Event("test", description = Some("test description"),
-        resources = Some(resourceList), inputs = None)
+        resources = resourceList, inputs = None)
 
       createEvent.execute(event).map(code => {
         Ok(s"event test insertion resulting code is $code")

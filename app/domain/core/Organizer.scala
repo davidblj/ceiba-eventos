@@ -11,6 +11,6 @@ class Organizer @Inject() (eventRepository: EventRepository) {
   def launchEvent(event: Event): Future[Int] = {
 
     // todo: leverage the incoming object into our organizer (validate that at least one resource is required)
-    eventRepository.createEvent(event)
+    eventRepository.insertEvent(event)
   }
 }
