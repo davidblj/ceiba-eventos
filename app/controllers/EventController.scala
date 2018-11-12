@@ -1,9 +1,10 @@
 package controllers
 
 import application.actions.events.CreateEvent
-import domain.models.Event
+import domain.models.{Event, Input, Resource}
 import javax.inject._
 import play.api.mvc._
+
 import scala.concurrent.ExecutionContext
 
 @Singleton
@@ -15,7 +16,11 @@ class EventController @Inject()(cc: ControllerComponents, createEvent: CreateEve
 
     request: Request[AnyContent] => {
 
-      val event = new Event("test", description = Some("test description"))
+      val resourceList = List(Resource("test resource", 0, Some("description"), Some(0)))
+      val inputList = List(Input("test input", 0, Some("description")))
+      val event = Event("test", description = Some("test description"),
+        resources = Some(resourceList), inputs = None)
+
       createEvent.execute(event).map(code => {
         Ok(s"event test insertion resulting code is $code")
       })
