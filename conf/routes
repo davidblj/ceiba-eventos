@@ -1,3 +1,4 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 
+GET     /evolutions                 controllers.EvolutionsController.executeEvolutions
 POST    /events                     controllers.EventController.CreateEvent

@@ -21,9 +21,9 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
 
   @Override def insertEvent(event: Event): Future[Int] = {
 
-    def insertInputsHandler(): Future[Any] = {
+    def insertInputsHandler(inputs: Option[List[Input]]): Future[Any] = {
 
-      if (event.inputs.isDefined) insertInputs(event.inputs.get)
+      if (inputs.isDefined) insertInputs(inputs.get)
       else Future.successful(None)
     }
 
@@ -37,7 +37,7 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
     for {
       event <- createEvent(event)
       _ <- insertResources(event.resources)
-      _ <- insertInputsHandler()
+      _ <- insertInputsHandler(event.inputs)
     } yield event.eventId.get
   }
 
