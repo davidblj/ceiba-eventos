@@ -1,27 +1,31 @@
 package controllers
 
 import application.actions.events.CreateEvent
-import domain.models.{Event, Input, Resource}
+import infrastructure.play.json.reads.Event
 import javax.inject._
 import play.api.mvc._
+import infrastructure.play.json.Validator
+import infrastructure.play.transformers.EventTransformer
 
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class EventController @Inject()(cc: ControllerComponents, createEvent: CreateEvent)
+class EventController @Inject()(cc: ControllerComponents, createEvent: CreateEvent, validator: Validator)
                                (implicit ec: ExecutionContext)
                                extends AbstractController(cc) {
 
-  def CreateEvent() = Action.async {
+  def CreateEvent(): Action[Event] = Action.async(validator.validateJson[Event]) {
+    request => {
 
-    request: Request[AnyContent] => {
-
-      val resourceList = List(Resource("test resource", 0, Some("description"), Some(0)))
+      /*val resourceList = List(Resource("test resource", 0, Some("description"), Some(0)))
       val inputList = List(Input("test input", 0, Some("description")))
       val event = Event("test", description = Some("test description"),
-        resources = resourceList, inputs = None)
+      resources = resourceList, inputs = None)*/
 
-      createEvent.execute(event).map(code => {
+      val event = request.body
+      val domainEventObject = EventTransformer.toDomainObject(event)
+
+      createEvent.execute(domainEventObject).map(code => {
         Ok(s"event test insertion resulting code is $code")
       })
     }
