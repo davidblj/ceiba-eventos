@@ -684,6 +684,24 @@
         <root url="jar://$USER_HOME$/.ivy2/cache/mysql/mysql-connector-java/srcs/mysql-connector-java-8.0.13-sources.jar!/" />
       </SOURCES>
     </library>
+    <library name="sbt: net.bytebuddy:byte-buddy-agent:1.9.0:jar">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.ivy2/cache/net.bytebuddy/byte-buddy-agent/jars/byte-buddy-agent-1.9.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.ivy2/cache/net.bytebuddy/byte-buddy-agent/srcs/byte-buddy-agent-1.9.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="sbt: net.bytebuddy:byte-buddy:1.9.0:jar">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.ivy2/cache/net.bytebuddy/byte-buddy/jars/byte-buddy-1.9.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.ivy2/cache/net.bytebuddy/byte-buddy/srcs/byte-buddy-1.9.0-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="sbt: net.java.dev.jna:jna-platform:4.1.0:jar">
       <CLASSES>
         <root url="jar://$USER_HOME$/.ivy2/cache/net.java.dev.jna/jna-platform/jars/jna-platform-4.1.0.jar!/" />
@@ -889,6 +907,24 @@
       <JAVADOC />
       <SOURCES>
         <root url="jar://$USER_HOME$/.ivy2/cache/org.joda/joda-convert/srcs/joda-convert-1.7-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="sbt: org.mockito:mockito-core:2.23.0:jar">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.ivy2/cache/org.mockito/mockito-core/jars/mockito-core-2.23.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.ivy2/cache/org.mockito/mockito-core/srcs/mockito-core-2.23.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="sbt: org.objenesis:objenesis:2.6:jar">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.ivy2/cache/org.objenesis/objenesis/jars/objenesis-2.6.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.ivy2/cache/org.objenesis/objenesis/srcs/objenesis-2.6-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="sbt: org.reactivestreams:reactive-streams:1.0.2:jar">
