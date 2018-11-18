@@ -2,7 +2,7 @@ package infrastructure.slick.entities
 
 import slick.jdbc.MySQLProfile.api._
 
-case class Event(id: Int = 0, name: String, description: Option[String] = None)
+case class Event(id: Int = 0, name: String, description: Option[String] = None, favoriteResource: Option[String] = None)
 
 class EventTable(tag: Tag) extends Table[Event](tag, "event"){
 
@@ -12,6 +12,7 @@ class EventTable(tag: Tag) extends Table[Event](tag, "event"){
   // Fields
   def name = column[String]("name")
   def description = column[Option[String]]("description")
+  def favoriteResource = column[Option[String]]("favorite_resource")
 
-  def * = (id, name, description) <> (Event.tupled, Event.unapply)
+  def * = (id, name, description, favoriteResource) <> (Event.tupled, Event.unapply)
 }

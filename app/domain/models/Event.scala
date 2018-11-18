@@ -2,9 +2,12 @@ package domain.models
 
 case class Event(name: String,
                  resources: List[Resource],
+                 favoriteResource: Option[String],
                  description: Option[String] = None,
                  inputs: Option[List[Input]] = None,
                  eventId: Option[Int] = None) {
+
+  require(checkFavoriteResource(), "favorite_resource must match a resource name in the resource item list")
 
   def setId(id: Int): Event = {
 
@@ -21,6 +24,13 @@ case class Event(name: String,
 
     val updatedResources = setResourcesId()
     val updatedInputs = setInputsId()
-    Event(name, updatedResources, description, updatedInputs, Some(id))
+    Event(name, updatedResources, description, favoriteResource, updatedInputs, Some(id))
+  }
+
+  private def checkFavoriteResource(): Boolean = {
+
+    if (favoriteResource.isDefined) {
+      resources.exists((resource: Resource) => resource.name == favoriteResource.get)
+    } else true
   }
 }

@@ -5,7 +5,9 @@ import infrastructure.play.json.reads.Event
 import javax.inject._
 import play.api.mvc._
 import infrastructure.play.json.Validator
+import infrastructure.play.json.writes.Error
 import infrastructure.play.transformers.EventTransformer
+import play.api.libs.json.Json
 
 import scala.concurrent.ExecutionContext
 
@@ -22,6 +24,8 @@ class EventController @Inject()(cc: ControllerComponents, createEvent: CreateEve
 
       createEvent.execute(domainEventObject).map(code => {
         Ok(s"event test insertion resulting code is $code")
+      }).recover( {
+        case e: IllegalArgumentException => UnprocessableEntity(Json.toJson(Error(e.getMessage)))
       })
     }
   }

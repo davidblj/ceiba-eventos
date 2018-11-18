@@ -29,11 +29,14 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
 
     def createEvent(event: Event): Future[Event] = {
 
-      val eventTableObject = EventTableObject(name = event.name, description = event.description)
+      // todo: use a transformer
+      val eventTableObject = EventTableObject(name = event.name, description = event.description,
+        favoriteResource = event.favoriteResource)
       val query = eventTable returning eventTable.map(e => e.id) += eventTableObject
       db.run(query).map(id => event.setId(id))
     }
 
+    // todo: handle slick errors
     for {
       event <- createEvent(event)
       _ <- insertResources(event.resources)

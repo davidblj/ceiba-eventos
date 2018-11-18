@@ -16,6 +16,6 @@ object EventTransformer {
       Some(event.inputs.get.map(input => Input(input.name, input.price, input.description)))
     } else None
 
-    Event(event.name, domainResourcesObject, event.description, domainInputsObject)
+    Event(event.name, domainResourcesObject, event.description, event.favoriteResource, domainInputsObject)
   }
 }

@@ -10,6 +10,6 @@ class Validator @Inject()(parser: PlayBodyParsers)
                          (implicit exec: ExecutionContext) {
 
   def validateJson[A : Reads]: BodyParser[A] = parser.json.validate(
-    _.validate[A].asEither.left.map(e => BadRequest(JsError.toJson(e)))
+    _.validate[A].asEither.left.map(e => UnprocessableEntity(JsError.toJson(e)))
   )
 }
