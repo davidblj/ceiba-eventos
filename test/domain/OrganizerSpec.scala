@@ -1,6 +1,6 @@
 package domain
 
-import domain.models.Event
+import domain.models.{Event, Resource}
 import domain.core.Organizer
 import builders.EventBuilder
 import domain.repositories.EventRepository
@@ -8,6 +8,7 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class OrganizerSpec extends PlaySpec with MockitoSugar with ScalaFutures {
@@ -28,6 +29,19 @@ class OrganizerSpec extends PlaySpec with MockitoSugar with ScalaFutures {
 
       // assert
       launchEventFuture map { code => code mustBe 2}
+    }
+
+    "failed gracefully to launch an event with a non-existing favorite resource in the resource list" in {
+
+      assertThrows[IllegalArgumentException] {
+
+        val nonExistingResource = "beer pack"
+        val resources = List(Resource("bottles of whiskey", 9.9f, stock = Some(50)))
+        new EventBuilder()
+          .withFavoriteResource(nonExistingResource)
+          .withResources(resources)
+          .build()
+      }
     }
   }
 }

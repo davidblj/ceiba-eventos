@@ -15,7 +15,15 @@ class EventBuilder {
 
   def withName() = {}
   def withDescription() = {}
-  def withFavoriteResource() = {}
-  def withResources() = {}
+
+  def withFavoriteResource(resource: String): EventBuilder = {
+    favoriteResource = Some(resource)
+    this
+  }
+
+  def withResources(resources: List[Resource]): EventBuilder = {
+    this.resources = resources
+    this
+  }
   def withInputs() = {}
 }
