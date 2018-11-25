@@ -27,6 +27,8 @@ case class Event(name: String,
     Event(name, updatedResources, description, favoriteResource, updatedInputs, Some(id))
   }
 
+  // utils
+
   private def checkFavoriteResource(): Boolean = {
 
     if (favoriteResource.isDefined) {

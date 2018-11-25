@@ -22,7 +22,7 @@ class EventController @Inject()(cc: ControllerComponents, createEvent: CreateEve
       val event = request.body
       val domainEventObject = EventTransformer.toDomainObject(event)
 
-      // todo: add a meaningful response message
+      // todo: return a meaningful response message structure
       createEvent.execute(domainEventObject).map(_ => {
         NoContent
       }).recover( {
