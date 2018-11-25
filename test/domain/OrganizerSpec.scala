@@ -25,10 +25,10 @@ class OrganizerSpec extends PlaySpec with MockitoSugar with ScalaFutures {
 
       // act
       val organizer = new Organizer(mockedEventRepository)
-      val launchEventFuture: Future[Int] = organizer.launchEvent(event)
+      val result: Future[Int] = organizer.launchEvent(event)
 
       // assert
-      launchEventFuture map { code => code mustBe 2}
+      result map { code => code mustBe 2}
     }
 
     "failed gracefully to launch an event with a non-existing favorite resource in the resource list" in {

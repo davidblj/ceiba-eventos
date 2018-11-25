@@ -22,8 +22,9 @@ class EventController @Inject()(cc: ControllerComponents, createEvent: CreateEve
       val event = request.body
       val domainEventObject = EventTransformer.toDomainObject(event)
 
-      createEvent.execute(domainEventObject).map(code => {
-        Ok(s"event test insertion resulting code is $code")
+      // todo: add a meaningful response message
+      createEvent.execute(domainEventObject).map(_ => {
+        NoContent
       }).recover( {
         case e: IllegalArgumentException => UnprocessableEntity(Json.toJson(Error(e.getMessage)))
       })

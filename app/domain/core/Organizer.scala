@@ -9,6 +9,7 @@ import scala.concurrent.Future
 class Organizer @Inject() (eventRepository: EventRepository) {
 
   def launchEvent(event: Event): Future[Int] = {
+
     eventRepository.insertEvent(event)
   }
 }
