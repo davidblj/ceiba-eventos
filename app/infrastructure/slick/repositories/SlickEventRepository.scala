@@ -2,8 +2,9 @@ package infrastructure.slick.repositories
 
 import domain.models.{Event, Input, Resource}
 import domain.repositories.EventRepository
-import infrastructure.slick.entities.{EventTable, InputTable, ResourceTable, Event => EventTableObject, Resource => ResourceTableObject}
-import infrastructure.slick.transformers.{InputTransformer, ResourceTransformer}
+import infrastructure.slick.entities.{EventLocationsTable, EventTable, InputTable, LocationTable, ResourceTable,
+                                      Resource => ResourceTableObject}
+import infrastructure.slick.transformers._
 import javax.inject.Inject
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.jdbc.JdbcProfile
@@ -15,11 +16,14 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
                                      extends HasDatabaseConfigProvider[JdbcProfile] with EventRepository {
 
   import profile.api._
+
   val eventTable = TableQuery[EventTable]
   val resourceTable = TableQuery[ResourceTable]
   val inputTable = TableQuery[InputTable]
+  val locationTable = TableQuery[LocationTable]
+  val eventLocationsTable = TableQuery[EventLocationsTable]
 
-  @Override def insertEvent(event: Event): Future[Int] = {
+  override def add(event: Event): Future[Int] = {
 
     def insertInputsHandler(inputs: Option[List[Input]]): Future[Any] = {
 
@@ -29,10 +33,8 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
 
     def createEvent(event: Event): Future[Event] = {
 
-      // todo: use a transformer
-      val eventTableObject = EventTableObject(name = event.name, description = event.description,
-        favoriteResource = event.favoriteResource)
-      val query = eventTable returning eventTable.map(e => e.id) += eventTableObject
+      val eventTableObject = EventTransformer.toTableObject(event)
+      val query = eventTable returning eventTable.map(_.id) += eventTableObject
       db.run(query).map(id => event.setId(id))
     }
 
@@ -42,6 +44,29 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
       _ <- insertResources(event.resources)
       _ <- insertInputsHandler(event.inputs)
     } yield event.eventId.get
+  }
+
+  override def addLocation(eventId: Int, location: String): Future[Int] = {
+
+    def insertLocation(): Future[Int] = {
+
+      val locationTableObject = LocationTransformer.toTableObject(location)
+      val addLocationQuery = locationTable returning locationTable.map(_.id) += locationTableObject
+      db.run(addLocationQuery)
+    }
+
+    def insertEventLocation(locationId: Int): Future[Int] = {
+
+      val eventLocationTableObject = EventLocationsTransformer.toTableObject(eventId, locationId)
+      val addEventLocationsQuery = eventLocationsTable += eventLocationTableObject
+      db.run(addEventLocationsQuery)
+    }
+
+    // todo: handle slick errors
+    for {
+      locationId <- insertLocation()
+      _ <- insertEventLocation(locationId)
+    } yield locationId
   }
 
   def insertResources(resources: List[Resource]): Future[Any] = {

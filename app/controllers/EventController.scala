@@ -14,7 +14,7 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class EventController @Inject()(cc: ControllerComponents, createEvent: CreateEvent, validator: Validator)
                                (implicit ec: ExecutionContext)
-                               extends AbstractController(cc) {
+                                extends AbstractController(cc) {
 
   def CreateEvent(): Action[Event] = Action.async(validator.validateJson[Event]) {
     request => {

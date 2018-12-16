@@ -4,6 +4,10 @@ import play.api.libs.json._
 import play.api.libs.json.Reads._
 import play.api.libs.functional.syntax._
 
+// todo: this objects should be defined inside the app layer
+//       the convertion to domain objects should be also done inside
+//       the app layer
+
 case class Input(name: String,
                  price: Float,
                  description: Option[String])

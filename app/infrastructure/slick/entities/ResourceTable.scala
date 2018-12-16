@@ -10,7 +10,7 @@ class ResourceTable(tag: Tag) extends Table[Resource](tag, "resource"){
   // PK
   def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
 
-  // FK7
+  // FK
   def event_id = column[Int]("event_id")
   def event = foreignKey("event_fk", event_id, eventTable)(_.id)
 

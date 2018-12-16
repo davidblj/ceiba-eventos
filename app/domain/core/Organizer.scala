@@ -9,8 +9,12 @@ import scala.concurrent.Future
 class Organizer @Inject() (eventRepository: EventRepository) {
 
   def launchEvent(event: Event): Future[Int] = {
-    // todo: handle an empty resource list (left unhandled in the controller)
-    // todo: handle the name and description minimun length and maximun length (left unhandled in the controller)
-    eventRepository.insertEvent(event)
+    // todo: handle every property requirement (empty resource list & properties characters length)
+    eventRepository.add(event)
+  }
+
+  def addEventLocation(eventId: Int, location: String): Future[Int] = {
+    // todo: handle a non existent event id
+    eventRepository.addLocation(eventId, location)
   }
 }
