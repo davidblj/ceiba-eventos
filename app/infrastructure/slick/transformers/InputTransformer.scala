@@ -5,13 +5,13 @@ import infrastructure.slick.entities.{Input => InputTableObject}
 
 object InputTransformer {
 
-  def toTableObjectList(inputs: List[Input]): List[InputTableObject] = {
-    inputs.map(input => toTableObject(input))
+  def toTableObjectList(inputs: List[Input], eventId: Int): List[InputTableObject] = {
+    inputs.map(input => toTableObject(input, eventId))
   }
 
-  def toTableObject(input: Input): InputTableObject = {
+  def toTableObject(input: Input, eventId: Int): InputTableObject = {
     // the eventId is mandatory, otherwise, it throws "no such element exception"
-    InputTableObject(event_id = input.eventId.get, name = input.name, description = input.description,
+    InputTableObject(event_id = eventId, name = input.name, description = input.description,
                      price = input.price)
   }
 }

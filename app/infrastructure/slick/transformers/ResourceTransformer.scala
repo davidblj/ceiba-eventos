@@ -5,13 +5,13 @@ import infrastructure.slick.entities.{Resource => ResourceTableObject}
 
 object ResourceTransformer {
 
-  def toTableObjectList(resources: List[Resource]): List[ResourceTableObject] = {
-    resources.map(resource => toTableObject(resource))
+  def toTableObjectList(resources: List[Resource], eventId: Int): List[ResourceTableObject] = {
+    resources.map(resource => toTableObject(resource, eventId))
   }
 
-  def toTableObject(resource: Resource): ResourceTableObject = {
+  def toTableObject(resource: Resource, eventId: Int): ResourceTableObject = {
     // the eventId is mandatory, otherwise, it throws "no such element exception"
-    ResourceTableObject(event_id = resource.eventId.get, name = resource.name, description = resource.description,
+    ResourceTableObject(event_id = eventId, name = resource.name, description = resource.description,
                         price = resource.price, stock = resource.stock)
   }
 }

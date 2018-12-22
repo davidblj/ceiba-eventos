@@ -9,8 +9,7 @@ object EventTransformer {
 
   def toDomainObject(event: EventAppObject): Event = {
 
-    val domainResourcesObject = event.resources.map(resource => Resource(resource.name, resource.price,
-      resource.description, resource.stock))
+    val domainResourcesObject = event.resources.map(resource => Resource(resource.name, resource.price, resource.description, resource.stock))
 
     val domainInputsObject = if (event.inputs.isDefined) {
       Some(event.inputs.get.map(input => Input(input.name, input.price, input.description)))

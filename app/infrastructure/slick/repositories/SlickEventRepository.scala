@@ -25,9 +25,9 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
 
   override def add(event: Event): Future[Int] = {
 
-    def insertInputsHandler(inputs: Option[List[Input]]): Future[Any] = {
+    def insertInputsHandler(inputs: Option[List[Input]], eventId: Int): Future[Any] = {
 
-      if (inputs.isDefined) insertInputs(inputs.get)
+      if (inputs.isDefined) insertInputs(inputs.get, eventId)
       else Future.successful(None)
     }
 
@@ -41,8 +41,8 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
     // todo: handle slick errors
     for {
       event <- createEvent(event)
-      _ <- insertResources(event.resources)
-      _ <- insertInputsHandler(event.inputs)
+      _ <- insertResources(event.resources, event.eventId.get)
+      _ <- insertInputsHandler(event.inputs, event.eventId.get)
     } yield event.eventId.get
   }
 
@@ -69,18 +69,18 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
     } yield locationId
   }
 
-  def insertResources(resources: List[Resource]): Future[Any] = {
+  def insertResources(resources: List[Resource], eventId: Int): Future[Any] = {
 
     // todo: validate the event id
-    val resourceTableSeq: Seq[ResourceTableObject] = ResourceTransformer.toTableObjectList(resources)
+    val resourceTableSeq: Seq[ResourceTableObject] = ResourceTransformer.toTableObjectList(resources, eventId)
     val query = resourceTable ++= resourceTableSeq
     db.run(query)
   }
 
-  def insertInputs(inputs: List[Input]): Future[Any] = {
+  def insertInputs(inputs: List[Input], eventId: Int): Future[Any] = {
 
     // todo: validate the event id
-    val inputTableSeq = InputTransformer.toTableObjectList(inputs)
+    val inputTableSeq = InputTransformer.toTableObjectList(inputs, eventId)
     val query = inputTable ++= inputTableSeq
     db.run(query)
   }
