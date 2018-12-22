@@ -1,31 +1,30 @@
 package controllers
 
 import application.actions.events.CreateEvent
-import infrastructure.play.json.reads.Event
+import application.transfer_objects.Event
+import infrastructure.play.json.reads.EventRead._
 import javax.inject._
 import play.api.mvc._
 import infrastructure.play.json.Validator
 import infrastructure.play.json.writes.Error
-import infrastructure.play.transformers.EventTransformer
 import play.api.libs.json.Json
 
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class EventController @Inject()(cc: ControllerComponents, createEvent: CreateEvent, validator: Validator)
+class EventController @Inject()(cc: ControllerComponents, CreateEvent: CreateEvent, validator: Validator)
                                (implicit ec: ExecutionContext)
                                 extends AbstractController(cc) {
 
-  def CreateEvent(): Action[Event] = Action.async(validator.validateJson[Event]) {
+  def createEvent(): Action[Event] = Action.async(validator.validateJson[Event]) {
     request => {
 
-      val event = request.body
-      val domainEventObject = EventTransformer.toDomainObject(event)
-
       // todo: return a meaningful response message structure
-      createEvent.execute(domainEventObject).map(_ => {
+
+      val event = request.body
+      CreateEvent.execute(event).map(_ => {
         NoContent
-      }).recover( {
+      }).recover({
         case e: IllegalArgumentException => UnprocessableEntity(Json.toJson(Error(e.getMessage)))
       })
     }

@@ -1,13 +1,13 @@
-package infrastructure.play.transformers
+package application.transformers
 
 import domain.models.Event
 import domain.models.Input
 import domain.models.Resource
-import infrastructure.play.json.reads.{Event => EventPlayObject}
+import application.transfer_objects.{Event => EventAppObject}
 
 object EventTransformer {
 
-  def toDomainObject(event: EventPlayObject): Event = {
+  def toDomainObject(event: EventAppObject): Event = {
 
     val domainResourcesObject = event.resources.map(resource => Resource(resource.name, resource.price,
       resource.description, resource.stock))

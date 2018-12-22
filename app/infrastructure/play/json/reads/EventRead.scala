@@ -1,29 +1,11 @@
 package infrastructure.play.json.reads
 
+import application.transfer_objects.{Event, Input, Resource}
 import play.api.libs.json._
 import play.api.libs.json.Reads._
 import play.api.libs.functional.syntax._
 
-// todo: this objects should be defined inside the app layer
-//       the convertion to domain objects should be also done inside
-//       the app layer
-
-case class Input(name: String,
-                 price: Float,
-                 description: Option[String])
-
-case class Resource(name: String,
-                    price: Float,
-                    description: Option[String],
-                    stock: Option[Int])
-
-case class Event(name: String,
-                 resources: List[Resource],
-                 favoriteResource: Option[String],
-                 description: Option[String],
-                 inputs: Option[List[Input]])
-
-object Event {
+object EventRead {
 
   implicit val resourceReads: Reads[Resource] = (
     (JsPath \ "name").read[String](minLength[String](3) keepAnd maxLength[String](24)) and

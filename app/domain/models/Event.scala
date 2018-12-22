@@ -9,7 +9,7 @@ case class Event(name: String,
 
   require(checkFavoriteResource(), "favorite_resource must match a resource name in the resource item list")
 
-  // todo: this implementation should change, the id is set only to avoid code witting in the transformers. Change it.
+  // todo: this implementation should change, the id is set only to avoid code writting in the transformers. Change it.
   def setId(id: Int): Event = {
 
     def setResourcesId(): List[Resource] = {
