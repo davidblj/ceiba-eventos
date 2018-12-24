@@ -1,14 +1,13 @@
 package infrastructure.slick.repositories
 
+import domain.data_containers.Location
 import domain.models.{Event, Input, Resource}
 import domain.repositories.EventRepository
-import infrastructure.slick.entities.{EventLocationsTable, EventTable, InputTable, LocationTable, ResourceTable,
-                                      Resource => ResourceTableObject}
+import infrastructure.slick.entities.{EventLocationsTable, EventTable, InputTable, LocationTable, ResourceTable, Resource => ResourceTableObject}
 import infrastructure.slick.transformers._
 import javax.inject.Inject
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.jdbc.JdbcProfile
-
 import scala.concurrent.{ExecutionContext, Future}
 
 class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvider)
@@ -46,18 +45,18 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
     } yield event.eventId.get
   }
 
-  override def addLocation(eventId: Int, location: String): Future[Int] = {
+  override def addLocation(location: Location): Future[Int] = {
 
     def insertLocation(): Future[Int] = {
 
-      val locationTableObject = LocationTransformer.toTableObject(location)
+      val locationTableObject = LocationTransformer.toTableObject(location.name)
       val addLocationQuery = locationTable returning locationTable.map(_.id) += locationTableObject
       db.run(addLocationQuery)
     }
 
     def insertEventLocation(locationId: Int): Future[Int] = {
 
-      val eventLocationTableObject = EventLocationsTransformer.toTableObject(eventId, locationId)
+      val eventLocationTableObject = EventLocationsTransformer.toTableObject(location.eventId, locationId)
       val addEventLocationsQuery = eventLocationsTable += eventLocationTableObject
       db.run(addEventLocationsQuery)
     }

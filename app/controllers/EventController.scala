@@ -2,7 +2,7 @@ package controllers
 
 import application.actions.events.CreateEvent
 import application.transfer_objects.Event
-import infrastructure.play.json.reads.EventRead._
+import infrastructure.play.json.reads.EventReads._
 import javax.inject._
 import play.api.mvc._
 import infrastructure.play.json.Validator

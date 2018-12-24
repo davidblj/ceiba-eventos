@@ -5,7 +5,7 @@ import play.api.libs.json._
 import play.api.libs.json.Reads._
 import play.api.libs.functional.syntax._
 
-object EventRead {
+object EventReads {
 
   implicit val resourceReads: Reads[Resource] = (
     (JsPath \ "name").read[String](minLength[String](3) keepAnd maxLength[String](24)) and
