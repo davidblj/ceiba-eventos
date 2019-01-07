@@ -16,7 +16,6 @@ case class Event(name: String,
   // utils
 
   private def checkFavoriteResource(): Boolean = {
-
     if (favoriteResource.isDefined) {
       resources.exists((resource: Resource) => resource.name == favoriteResource.get)
     } else true

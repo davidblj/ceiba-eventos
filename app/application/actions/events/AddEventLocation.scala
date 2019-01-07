@@ -9,6 +9,6 @@ import scala.concurrent.Future
 class AddEventLocation @Inject() (organizer: Organizer){
 
   def execute(location: Location): Future[Int] = {
-    organizer.addEventLocation(location)
+    organizer.subscribeLocation(location)
   }
 }

@@ -47,6 +47,7 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
 
   override def addLocation(location: Location): Future[Int] = {
 
+    // todo: move this method into the location repo
     def insertLocation(): Future[Int] = {
 
       val locationTableObject = LocationTransformer.toTableObject(location.name)
@@ -70,7 +71,6 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
 
   def insertResources(resources: List[Resource], eventId: Int): Future[Any] = {
 
-    // todo: validate the event id
     val resourceTableSeq: Seq[ResourceTableObject] = ResourceTransformer.toTableObjectList(resources, eventId)
     val query = resourceTable ++= resourceTableSeq
     db.run(query)
@@ -78,7 +78,6 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
 
   def insertInputs(inputs: List[Input], eventId: Int): Future[Any] = {
 
-    // todo: validate the event id
     val inputTableSeq = InputTransformer.toTableObjectList(inputs, eventId)
     val query = inputTable ++= inputTableSeq
     db.run(query)

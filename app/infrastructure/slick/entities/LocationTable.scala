@@ -9,6 +9,7 @@ class LocationTable(tag: Tag) extends Table[Location](tag, "location"){
   // PK
   def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
 
+  // todo: should this field be the primary key (?)
   // Fields
   def name = column[String]("name")
 

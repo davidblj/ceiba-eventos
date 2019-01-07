@@ -1,5 +1,8 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 
 GET     /evolutions                 controllers.EvolutionsController.executeEvolutions
+
 POST    /events                     controllers.EventController.createEvent
+
 POST    /events/locations           controllers.LocationController.addEventLocation
+GET     /events/locations           controllers.LocationController.getAllLocations

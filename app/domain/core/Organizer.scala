@@ -2,19 +2,25 @@ package domain.core
 
 import domain.data_containers.Location
 import domain.models.Event
-import domain.repositories.EventRepository
+import domain.repositories.{EventRepository, LocationRepository}
 import javax.inject.Inject
+
 import scala.concurrent.Future
 
-class Organizer @Inject() (eventRepository: EventRepository) {
+// todo: move this class into a new package (think out the aggregate structure)
+class Organizer @Inject() (eventRepository: EventRepository, locationRepository: LocationRepository) {
 
   def launchEvent(event: Event): Future[Int] = {
     // todo: handle every property requirement (empty resource list & properties characters length -in the model-)
     eventRepository.add(event)
   }
 
-  def addEventLocation(location: Location): Future[Int] = {
-    // todo: handle a non existent event id (get event by id)
+  def subscribeLocation(location: Location): Future[Int] = {
+    // todo: handle a non existent event id (get event by id, -in the repo-)
     eventRepository.addLocation(location)
+  }
+
+  def lookUpAllLocations(): Future[Seq[String]] = {
+    locationRepository.getAll
   }
 }
