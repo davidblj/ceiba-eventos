@@ -4,7 +4,7 @@
   <component name="HydraSettings">
     <option name="hydraStorePath" value="$PROJECT_DIR$/.hydra/idea" />
     <option name="noOfCores" value="2" />
-    <option name="projectRoot" value="$PROJECT_DIR$" />
+    <option name="projectRoot" value="C:\Users\davihabo\IdeaProjects\ceiba-eventos" />
     <option name="sourcePartitioner" value="auto" />
   </component>
   <component name="InspectionProjectProfileManager">
@@ -188,6 +188,15 @@
       <JAVADOC />
       <SOURCES>
         <root url="jar://$USER_HOME$/.ivy2/cache/com.google.guava/guava/srcs/guava-22.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="sbt: com.google.guava:guava:23.0:jar">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.ivy2/cache/com.google.guava/guava/jars/guava-23.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.ivy2/cache/com.google.guava/guava/srcs/guava-23.0-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="sbt: com.google.inject.extensions:guice-assistedinject:4.1.0:jar">

@@ -2,11 +2,11 @@ package controllers
 
 import application.actions.events.{AddEventLocation, GetAllLocations}
 import domain.data_containers.Location
+import infrastructure.play.json.Validator
 import infrastructure.play.json.reads.LocationReads._
 import javax.inject._
-import play.api.mvc.{AbstractController, Action, ControllerComponents}
-import infrastructure.play.json.Validator
 import play.api.libs.json.Json
+import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
 
 import scala.concurrent.ExecutionContext
 
@@ -26,11 +26,12 @@ class LocationController @Inject() (cc: ControllerComponents, AddEventLocation: 
     }
   }
 
-  def getAllLocations() = Action.async {
+  def getAllLocations: Action[AnyContent] = Action.async {
     _ => {
 
+      // todo: handle exception
       GetAllLocations.execute().map(result => {
-        Ok(Json.toJson(result))
+        Ok(Json.obj("locations" -> result))
       })
     }
   }
