@@ -1,7 +1,7 @@
 package domain.core
 
 import domain.data_containers.Location
-import domain.models.Event
+import domain.models.{Event, Resource}
 import domain.repositories.{EventRepository, LocationRepository}
 import javax.inject.Inject
 
@@ -22,5 +22,10 @@ class Organizer @Inject() (eventRepository: EventRepository, locationRepository:
 
   def lookUpAllLocations(): Future[Seq[String]] = {
     locationRepository.getAll
+  }
+
+  def lookUpResourcesBy(eventId: Int): Future[Seq[Resource]] = {
+    // todo: handle a non existent event id (get event by id, -in the repo-)
+    eventRepository.getResourcesBy(eventId)
   }
 }

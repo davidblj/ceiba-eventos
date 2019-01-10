@@ -7,7 +7,7 @@ import application.transfer_objects.{Event => EventAppObject}
 
 object EventTransformer {
 
-  def toDomainObject(event: EventAppObject): Event = {
+  def applicationToDomainObject(event: EventAppObject): Event = {
 
     val domainResourcesObject = event.resources.map(resource => Resource(resource.name, resource.price, resource.description, resource.stock))
 

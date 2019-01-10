@@ -6,3 +6,5 @@ POST    /events                     controllers.EventController.createEvent
 
 POST    /events/locations           controllers.LocationController.addEventLocation
 GET     /events/locations           controllers.LocationController.getAllLocations
+
+GET     /events/:id/resources       controllers.ResourcesController.getAllResources(id: Int)

@@ -1,7 +1,7 @@
 package infrastructure.slick.repositories
 
 import domain.repositories.LocationRepository
-import infrastructure.slick.entities.{LocationTable, Location}
+import infrastructure.slick.entities.LocationTable
 import javax.inject.Inject
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.jdbc.JdbcProfile

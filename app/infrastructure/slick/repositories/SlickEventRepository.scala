@@ -10,7 +10,7 @@ import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.jdbc.JdbcProfile
 import scala.concurrent.{ExecutionContext, Future}
 
-class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvider)
+class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvider, val slickResourceRepository: SlickResourceRepository)
                                      (implicit ec: ExecutionContext)
                                      extends HasDatabaseConfigProvider[JdbcProfile] with EventRepository {
 
@@ -69,6 +69,11 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
     } yield locationId
   }
 
+  override def getResourcesBy(eventId: Int): Future[Seq[Resource]] = {
+    slickResourceRepository.getAllByEventId(eventId)
+  }
+
+  // todo: use a resource and an input repo, but use it through this class
   def insertResources(resources: List[Resource], eventId: Int): Future[Any] = {
 
     val resourceTableSeq: Seq[ResourceTableObject] = ResourceTransformer.toTableObjectList(resources, eventId)

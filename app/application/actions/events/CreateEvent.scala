@@ -11,7 +11,7 @@ class CreateEvent @Inject() (organizer: Organizer) {
 
   def execute(event: EventTransferObject): Future[Int] = {
 
-    val domainEventObject = EventTransformer.toDomainObject(event)
+    val domainEventObject = EventTransformer.applicationToDomainObject(event)
     organizer.launchEvent(domainEventObject)
   }
 }
