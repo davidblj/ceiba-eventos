@@ -1,7 +1,7 @@
 package controllers
 
 import application.actions.events.{AddEventLocation, GetAllLocations}
-import domain.data_containers.Location
+import domain.value_objects.Location
 import infrastructure.play.json.Validator
 import infrastructure.play.json.reads.LocationReads._
 import javax.inject._

@@ -14,4 +14,8 @@ object ResourceTransformer {
     ResourceTableObject(event_id = eventId, name = resource.name, description = resource.description,
                         price = resource.price, stock = resource.stock)
   }
+
+  def toDomainObjectList(resources: Seq[ResourceTableObject]): Seq[Resource] = {
+    resources.map(resource => Resource(resource.name, resource.price, resource.description, resource.stock))
+  }
 }

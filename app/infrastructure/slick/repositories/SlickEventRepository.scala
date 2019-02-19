@@ -1,9 +1,10 @@
 package infrastructure.slick.repositories
 
-import domain.data_containers.Location
 import domain.models.{Event, Input, Resource}
 import domain.repositories.EventRepository
-import infrastructure.slick.entities.{EventLocationsTable, EventTable, InputTable, LocationTable, ResourceTable, Resource => ResourceTableObject}
+import domain.value_objects.Location
+import infrastructure.slick.entities
+import infrastructure.slick.entities._
 import infrastructure.slick.transformers._
 import javax.inject.Inject
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
@@ -69,18 +70,29 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
     } yield locationId
   }
 
-  override def getResourcesBy(eventId: Int): Future[Seq[Resource]] = {
+  override def getEventBy(id: Int): Future[Event] = {
+
+    // todo: attach its inputs
+    def getBasicEventInformation: Future[entities.Event] = {
+      val query = eventTable.result.head
+      db.run(query)
+    }
+
+    for {
+      basicEventInformation <- getBasicEventInformation
+      resources <- getResources(id)
+    } yield EventTransformer.toDomainObject(basicEventInformation, resources)
+  }
+
+  def getResources(eventId: Int): Future[Seq[Resource]] = {
     slickResourceRepository.getAllByEventId(eventId)
   }
 
-  // todo: use a resource and an input repo, but use it through this class
   def insertResources(resources: List[Resource], eventId: Int): Future[Any] = {
-
-    val resourceTableSeq: Seq[ResourceTableObject] = ResourceTransformer.toTableObjectList(resources, eventId)
-    val query = resourceTable ++= resourceTableSeq
-    db.run(query)
+    slickResourceRepository.add(resources, eventId)
   }
 
+  // todo: use an input repo, but use it through this class
   def insertInputs(inputs: List[Input], eventId: Int): Future[Any] = {
 
     val inputTableSeq = InputTransformer.toTableObjectList(inputs, eventId)

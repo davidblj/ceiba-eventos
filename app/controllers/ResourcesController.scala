@@ -1,7 +1,7 @@
 package controllers
 
 import application.actions.events.GetAllResources
-import infrastructure.play.json.writes.Resources
+import infrastructure.play.json.writes.Resources.eventResourcesWrites
 import javax.inject.Inject
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
@@ -17,7 +17,7 @@ class ResourcesController @Inject()(cc: ControllerComponents, GetAllResources: G
 
       // todo: handle exception
       GetAllResources.execute(eventId).map(result => {
-        Ok(Json.toJson(Resources(result)))
+        Ok(Json.toJson(result))
       })
     }
   }

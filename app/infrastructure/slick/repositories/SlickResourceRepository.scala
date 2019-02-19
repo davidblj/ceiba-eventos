@@ -1,7 +1,8 @@
 package infrastructure.slick.repositories
 
 import domain.models.Resource
-import infrastructure.slick.entities.{Resource => InfraResource, ResourceTable}
+import infrastructure.slick.entities.{ResourceTable, Resource => ResourceTableObject}
+import infrastructure.slick.transformers.ResourceTransformer
 import javax.inject.Inject
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.jdbc.JdbcProfile
@@ -15,14 +16,16 @@ class SlickResourceRepository @Inject() (val dbConfigProvider: DatabaseConfigPro
   import profile.api._
   val resourceTable = TableQuery[ResourceTable]
 
+  def add(resources: List[Resource], eventId: Int): Future[Any] = {
+
+    val resourceTableSeq: Seq[ResourceTableObject] = ResourceTransformer.toTableObjectList(resources, eventId)
+    val query = resourceTable ++= resourceTableSeq
+    db.run(query)
+  }
+
   def getAllByEventId(eventId: Int): Future[Seq[Resource]] = {
 
-    // todo: move it into the transformers
-    def resourceToDomain(resources: Seq[InfraResource]): Seq[Resource] = {
-      resources.map(resource => Resource(resource.name, resource.price, resource.description, resource.stock))
-    }
-
     val query = resourceTable.filter(_.event_id === eventId).result
-    db.run(query).map(resources => resourceToDomain(resources))
+    db.run(query).map(resources => ResourceTransformer.toDomainObjectList(resources))
   }
 }
