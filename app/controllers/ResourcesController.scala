@@ -21,4 +21,11 @@ class ResourcesController @Inject()(cc: ControllerComponents, GetAllResources: G
       })
     }
   }
+
+  /*def changeResourceAmount() = Action.async {
+
+    _ => {
+
+    }
+  }*/
 }

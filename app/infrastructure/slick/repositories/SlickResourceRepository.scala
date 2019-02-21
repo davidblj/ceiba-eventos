@@ -28,4 +28,13 @@ class SlickResourceRepository @Inject() (val dbConfigProvider: DatabaseConfigPro
     val query = resourceTable.filter(_.event_id === eventId).result
     db.run(query).map(resources => ResourceTransformer.toDomainObjectList(resources))
   }
+
+  def setAmount(amount: Int) = {
+
+  }
+
+  def getById() = {
+
+  }
+
 }
