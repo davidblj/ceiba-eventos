@@ -2,11 +2,12 @@ package controllers
 
 import application.actions.events.CreateEvent
 import application.transfer_objects.Event
+import domain.value_objects.Fail
 import infrastructure.play.json.reads.EventReads._
 import javax.inject._
 import play.api.mvc._
 import infrastructure.play.json.Validator
-import infrastructure.play.json.writes.Error
+import infrastructure.play.json.writes.FailWrites.failWrites
 import play.api.libs.json.Json
 
 import scala.concurrent.ExecutionContext
@@ -25,7 +26,7 @@ class EventController @Inject()(cc: ControllerComponents, CreateEvent: CreateEve
       CreateEvent.execute(event).map(_ => {
         NoContent
       }).recover({
-        case e: IllegalArgumentException => UnprocessableEntity(Json.toJson(Error(e.getMessage)))
+        case e: IllegalArgumentException => UnprocessableEntity(Json.toJson(Fail(e.getMessage)))
       })
     }
   }

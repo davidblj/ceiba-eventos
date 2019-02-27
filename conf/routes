@@ -1,10 +1,15 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 
-GET     /evolutions                 controllers.EvolutionsController.executeEvolutions
-
+# event actions
 POST    /events                     controllers.EventController.createEvent
 
+# location actions
 POST    /events/locations           controllers.LocationController.addEventLocation
 GET     /events/locations           controllers.LocationController.getAllLocations
 
-GET     /events/:id/resources       controllers.ResourcesController.getAllResources(id: Int)
+# resource actions
+GET     /events/:id/resources                             controllers.ResourcesController.getAllResources(id: Int)
+PUT     /events/:eventId/resources/:resourceId            controllers.ResourcesController.changeResourceAmount(resourceId: Int, resourceId: Int)
+
+# evolutions trigger
+GET     /evolutions                 controllers.EvolutionsController.executeEvolutions

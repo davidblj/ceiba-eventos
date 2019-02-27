@@ -2,13 +2,14 @@ package infrastructure.slick.repositories
 
 import domain.models.{Event, Input, Resource}
 import domain.repositories.EventRepository
-import domain.value_objects.Location
+import domain.value_objects.{Location, ResourceStock}
 import infrastructure.slick.entities
 import infrastructure.slick.entities._
 import infrastructure.slick.transformers._
 import javax.inject.Inject
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.jdbc.JdbcProfile
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvider, val slickResourceRepository: SlickResourceRepository)
@@ -70,7 +71,7 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
     } yield locationId
   }
 
-  override def getEventBy(id: Int): Future[Event] = {
+  override def getBy(id: Int): Future[Event] = {
 
     // todo: attach its inputs
     def getBasicEventInformation: Future[entities.Event] = {
@@ -80,21 +81,29 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
 
     for {
       basicEventInformation <- getBasicEventInformation
-      resources <- getResources(id)
+      resources <- getResourcesBy(id)
     } yield EventTransformer.toDomainObject(basicEventInformation, resources)
   }
 
-  def getResources(eventId: Int): Future[Seq[Resource]] = {
-    slickResourceRepository.getAllByEventId(eventId)
+  override def getResourceBy(resourceId: Int): Future[Resource] = {
+    slickResourceRepository.getBy(resourceId)
+  }
+
+  override def set(resourceStock: ResourceStock): Future[Int] = {
+    slickResourceRepository.set(resourceStock)
+  }
+
+  def getResourcesBy(eventId: Int): Future[Seq[Resource]] = {
+    slickResourceRepository.getAllResourcesBy(eventId)
   }
 
   def insertResources(resources: List[Resource], eventId: Int): Future[Any] = {
     slickResourceRepository.add(resources, eventId)
   }
 
-  // todo: use an input repo, but use it through this class
   def insertInputs(inputs: List[Input], eventId: Int): Future[Any] = {
 
+    // todo: use an input repo, and use it through this class
     val inputTableSeq = InputTransformer.toTableObjectList(inputs, eventId)
     val query = inputTable ++= inputTableSeq
     db.run(query)

@@ -26,7 +26,7 @@ class OrganizerSpec extends PlaySpec with MockitoSugar with ScalaFutures {
 
       // act
       val organizer = new Organizer(mockedEventRepository, mockedLocationRepository)
-      val result: Future[Int] = organizer.launchEvent(event)
+      val result: Future[Int] = organizer.launch(event)
 
       // assert
       result map { code => code mustBe 2}

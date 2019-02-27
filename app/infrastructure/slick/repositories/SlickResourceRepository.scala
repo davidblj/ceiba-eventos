@@ -1,6 +1,7 @@
 package infrastructure.slick.repositories
 
 import domain.models.Resource
+import domain.value_objects.ResourceStock
 import infrastructure.slick.entities.{ResourceTable, Resource => ResourceTableObject}
 import infrastructure.slick.transformers.ResourceTransformer
 import javax.inject.Inject
@@ -23,18 +24,23 @@ class SlickResourceRepository @Inject() (val dbConfigProvider: DatabaseConfigPro
     db.run(query)
   }
 
-  def getAllByEventId(eventId: Int): Future[Seq[Resource]] = {
+  def getAllResourcesBy(eventId: Int): Future[Seq[Resource]] = {
 
     val query = resourceTable.filter(_.event_id === eventId).result
     db.run(query).map(resources => ResourceTransformer.toDomainObjectList(resources))
   }
 
-  def setAmount(amount: Int) = {
+  def getBy(resourceId: Int): Future[Resource] = {
 
+    val query = resourceTable.filter(_.id === resourceId).result.head
+    db.run(query).map(resource => ResourceTransformer.toDomainObject(resource))
   }
 
-  def getById() = {
+  def set(resourceStock: ResourceStock): Future[Int] = {
 
+    val query = resourceTable.filter(_.id === resourceStock.id)
+                             .map(_.stock)
+    val updateQuery = query.update(Some(resourceStock.amount))
+    db.run(updateQuery)
   }
-
 }
