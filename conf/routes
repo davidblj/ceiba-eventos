@@ -8,8 +8,8 @@ POST    /events/locations           controllers.LocationController.addEventLocat
 GET     /events/locations           controllers.LocationController.getAllLocations
 
 # resource actions
-GET     /events/:id/resources                             controllers.ResourcesController.getAllResources(id: Int)
-PUT     /events/:eventId/resources/:resourceId            controllers.ResourcesController.changeResourceAmount(resourceId: Int, resourceId: Int)
+GET     /events/:id/resources                                                controllers.ResourcesController.getAllResources(id: Int)
+PUT     /events/:eventId/resources/:resourceId/stock/:stockAmount            controllers.ResourcesController.changeResourceAmount(eventId: Int, resourceId: Int, stockAmount: Int)
 
 # evolutions trigger
 GET     /evolutions                 controllers.EvolutionsController.executeEvolutions

@@ -2,7 +2,7 @@ package domain.core
 
 import domain.models.{Event, Resource}
 import domain.repositories.{EventRepository, LocationRepository}
-import domain.value_objects.{Fail, EventResources, Location, ResourceStock}
+import domain.value_objects.{EventResources, Fail, Location, ResourceQuantityAmount}
 import javax.inject.Inject
 
 import scala.concurrent.Future
@@ -30,41 +30,56 @@ class Organizer @Inject() (eventRepository: EventRepository, locationRepository:
     eventRepository.getBy(eventId).map(event => EventResources(event.favoriteResource, event.resources))
   }
 
-  def set(resourceStock: ResourceStock): Future[Either[Fail, Any]] = {
+  // update `resource` set `quantity` = 0 where `resource`.`id` = 16
+  def set(resourceQuantityAmount: ResourceQuantityAmount): Future[None.type] = {
 
-    def performResourceUpdateTo(storedResource: Resource): Either[Fail, Future[Int]] = {
-      checkIllegalResourceAmountIn(storedResource).flatMap(_ => Right(eventRepository.set(resourceStock)))
+    def checkIllegalQuantityAmountFor(storedResource: Resource): Future[None.type] = {
+
+      val validationResult =
+        if (storedResource.stock.isDefined) {
+          compareIncomingResourceQuantityAmountAndResourceStock(storedResource)
+        } else {
+          Right(Unit)
+        }
+
+      validationResult match {
+        case Right(_) => Future.successful(None)
+        case Left(fail) => Future.failed(new Exception(fail.message))
+      }
     }
 
-    def checkIllegalResourceAmountIn(resource: Resource): Either[Fail, Any] = {
+    def compareIncomingResourceQuantityAmountAndResourceStock(storedResource: Resource): Either[Fail, Unit.type] = {
 
-      val storedResourceStockAmount = resource.stock
-      if (storedResourceStockAmount.isDefined) {
+      val availableStock = storedResource.stock.get - storedResource.quantity.getOrElse(0)
+      val newResourceQuantityAmountIsIllegal = resourceQuantityAmount.amount > availableStock
 
-        val newResourceStockIsIllegal = resourceStock.amount > storedResourceStockAmount.get
-        if (newResourceStockIsIllegal) {
-
-          Left(Fail(s"This resource maximum stock is $storedResourceStockAmount, " +
-                     s"while ${storedResourceStockAmount.get} surpasses that amount."))
-        } else Right()
-
-      } else Right()
+      if (newResourceQuantityAmountIsIllegal) {
+        Left(Fail(s"This resource available stock is $availableStock, " +
+                  s"and ${resourceQuantityAmount.amount} already surpasses that amount."))
+      } else {
+        Right(Unit)
+      }
     }
 
-    def check(changedRowsInDB: Future[Int]): Future[Either[Fail, Any]] = {
+    def setNewResourceQuantityFrom(storedResource: Resource): Future[Int] = {
 
-      changedRowsInDB.map(amount => {
+      val mergedQuantity = storedResource.quantity.getOrElse(0) + resourceQuantityAmount.amount
+      val mergedResourceQuantityAmount = ResourceQuantityAmount(mergedQuantity, resourceQuantityAmount.id)
+      eventRepository.set(mergedResourceQuantityAmount)
+    }
 
-        if (amount  > 0)
-          Right()
-        else
-          Left(Fail(s"Resource with id ${resourceStock.id} was not found, and hence not updated"))
-      })
+    def check(changedRowsInDB: Int): Future[None.type] = {
+
+      if (changedRowsInDB > 0)
+        Future.successful(None)
+      else
+        Future.failed(new Exception("Resource with id ${resourceStock.id} was not found, and hence not updated"))
     }
 
     for {
-      storedResource   <- eventRepository.getResourceBy(resourceStock.id)
-      changedRowsInDB  <- performResourceUpdateTo(storedResource)
+      storedResource   <- eventRepository.getResourceBy(resourceQuantityAmount.id)
+      _                <- checkIllegalQuantityAmountFor(storedResource)
+      changedRowsInDB  <- setNewResourceQuantityFrom(storedResource)
       operationResult  <- check(changedRowsInDB)
     } yield operationResult
   }

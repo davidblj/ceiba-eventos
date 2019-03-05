@@ -6,7 +6,6 @@ import infrastructure.slick.entities.{Resource => ResourceTableObject}
 object ResourceTransformer {
 
   def toTableObject(resource: Resource, eventId: Int): ResourceTableObject = {
-    // the eventId is mandatory, otherwise, it throws "no such element exception"
     ResourceTableObject(event_id = eventId, name = resource.name, description = resource.description,
                         price = resource.price, stock = resource.stock)
   }
@@ -16,7 +15,8 @@ object ResourceTransformer {
   }
 
   def toDomainObject(resource: ResourceTableObject): Resource = {
-    Resource(resource.name, resource.price, resource.description, resource.stock, Some(resource.id))
+    Resource(resource.name, resource.price, resource.description, resource.stock, Some(resource.id),
+             resource.quantity)
   }
 
   def toDomainObjectList(resources: Seq[ResourceTableObject]): Seq[Resource] = {

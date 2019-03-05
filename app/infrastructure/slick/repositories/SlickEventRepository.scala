@@ -2,7 +2,7 @@ package infrastructure.slick.repositories
 
 import domain.models.{Event, Input, Resource}
 import domain.repositories.EventRepository
-import domain.value_objects.{Location, ResourceStock}
+import domain.value_objects.{Location, ResourceQuantityAmount}
 import infrastructure.slick.entities
 import infrastructure.slick.entities._
 import infrastructure.slick.transformers._
@@ -89,8 +89,8 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
     slickResourceRepository.getBy(resourceId)
   }
 
-  override def set(resourceStock: ResourceStock): Future[Int] = {
-    slickResourceRepository.set(resourceStock)
+  override def set(resourceQuantityAmount: ResourceQuantityAmount): Future[Int] = {
+    slickResourceRepository.set(resourceQuantityAmount)
   }
 
   def getResourcesBy(eventId: Int): Future[Seq[Resource]] = {
