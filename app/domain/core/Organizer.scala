@@ -1,6 +1,6 @@
 package domain.core
 
-import domain.models.{Event, Resource}
+import domain.models.{Attendant, Event, Resource}
 import domain.repositories.{EventRepository, LocationRepository}
 import domain.value_objects.{EventResources, Fail, Location, ResourceQuantityAmount}
 import javax.inject.Inject
@@ -82,5 +82,8 @@ class Organizer @Inject() (eventRepository: EventRepository, locationRepository:
       changedRowsInDB  <- setNewResourceQuantityFrom(storedResource)
       operationResult  <- check(changedRowsInDB)
     } yield operationResult
+  }
+
+  def subscribe(attendant: Attendant): Unit = {
   }
 }
