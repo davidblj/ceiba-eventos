@@ -1,7 +1,7 @@
 package domain.core
 
 import domain.models.{Attendant, Event, Resource}
-import domain.repositories.{EventRepository, LocationRepository}
+import domain.repositories.{AttendantRepository, EventRepository, LocationRepository}
 import domain.value_objects.{EventResources, Fail, Location, ResourceQuantityAmount}
 import javax.inject.Inject
 
@@ -9,7 +9,8 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 // todo: move this class into a new package (think out the aggregate structure)
-class Organizer @Inject() (eventRepository: EventRepository, locationRepository: LocationRepository) {
+class Organizer @Inject() (eventRepository: EventRepository, locationRepository: LocationRepository,
+                           attendantRepository: AttendantRepository) {
 
   def launch(event: Event): Future[Int] = {
     // todo: handle every property requirement (empty resource list & properties characters length -in the model-)
@@ -27,7 +28,8 @@ class Organizer @Inject() (eventRepository: EventRepository, locationRepository:
   }
 
   def lookUpResourcesBy(eventId: Int): Future[EventResources] = {
-    eventRepository.getBy(eventId).map(event => EventResources(event.favoriteResource, event.resources))
+    eventRepository.getBy(eventId)
+                   .map(event => EventResources(event.favoriteResource, event.resources))
   }
 
   // update `resource` set `quantity` = 0 where `resource`.`id` = 16
@@ -84,6 +86,7 @@ class Organizer @Inject() (eventRepository: EventRepository, locationRepository:
     } yield operationResult
   }
 
-  def subscribe(attendant: Attendant): Unit = {
+  def getAttendantsBy(attendantName: String): Future[List[Attendant]] = {
+    this.attendantRepository.getBy(attendantName)
   }
 }

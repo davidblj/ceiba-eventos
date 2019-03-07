@@ -3,7 +3,7 @@ package controllers
 import application.actions.events.{ChangeResourceAmount, GetAllResources}
 import domain.value_objects.{Fail, ResourceQuantityAmount}
 import infrastructure.play.json.Validator
-import infrastructure.play.json.writes.Resources.eventResourcesWrites
+import infrastructure.play.json.writes.ResourcesWrites.eventResourcesWrites
 import javax.inject.Inject
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
@@ -30,7 +30,7 @@ class ResourcesController @Inject()(cc: ControllerComponents, GetAllResources: G
     _ => {
 
       val resourceStock = ResourceQuantityAmount(deliveredAmount, resourceId)
-      ChangeResourceAmount.execute(resourceStock).map(result => {
+      ChangeResourceAmount.execute(resourceStock).map(_ => {
         NoContent
       }).recover({
         case e: Exception => BadRequest(Json.toJson(Fail(e.getMessage)))

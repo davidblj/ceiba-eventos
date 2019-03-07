@@ -4,7 +4,7 @@
 
 CREATE TABLE attendant (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    fullName CHAR(30)
+    full_name CHAR(30)
 );
 
 # --- !Downs

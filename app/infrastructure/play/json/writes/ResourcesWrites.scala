@@ -4,9 +4,9 @@ import domain.models.Resource
 import domain.value_objects.EventResources
 import play.api.libs.json._
 
-case class Resources(resources: Seq[Resource])
+case class ResourcesWrites(resources: Seq[Resource])
 
-object Resources {
+object ResourcesWrites {
   implicit val resourceWrites: OWrites[Resource] = Json.writes[Resource]
   implicit val eventResourcesWrites: OWrites[EventResources] = Json.writes[EventResources]
 }
