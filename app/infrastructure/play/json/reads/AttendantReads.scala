@@ -7,7 +7,7 @@ import play.api.libs.functional.syntax._
 
 object AttendantReads {
 
-  // todo: verifying that is positive.
+  /*// todo: verifying that is positive.
   implicit val assignedResourceReads: Reads[AssignedResource] = (
     (JsPath \ "resource_id").read[Int] and
     (JsPath \ "assignedAmount").read[Int]
@@ -16,5 +16,5 @@ object AttendantReads {
   implicit val attendant: Reads[Attendant] = {
     (JsPath \ "full_name").read[String](minLength[String](3) keepAnd maxLength[String](24)) and
       (JsPath \ "assigned_resources").read[List]
-  }
+  }*/
 }

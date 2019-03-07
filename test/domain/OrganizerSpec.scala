@@ -3,7 +3,7 @@ package domain
 import domain.models.{Event, Resource}
 import domain.core.Organizer
 import builders.EventBuilder
-import domain.repositories.{EventRepository, LocationRepository}
+import domain.repositories.{AttendantRepository, EventRepository, LocationRepository}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.mockito.Mockito._
@@ -22,10 +22,11 @@ class OrganizerSpec extends PlaySpec with MockitoSugar with ScalaFutures {
       val event: Event = new EventBuilder().build()
       val mockedEventRepository = mock[EventRepository]
       val mockedLocationRepository = mock[LocationRepository]
+      val mockedAttendantRepository = mock[AttendantRepository]
       when(mockedEventRepository.add(event)) thenReturn Future.successful(1)
 
       // act
-      val organizer = new Organizer(mockedEventRepository, mockedLocationRepository)
+      val organizer = new Organizer(mockedEventRepository, mockedLocationRepository, mockedAttendantRepository)
       val result: Future[Int] = organizer.launch(event)
 
       // assert
