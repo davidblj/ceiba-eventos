@@ -11,5 +11,8 @@ GET     /events/locations           controllers.LocationController.getAllLocatio
 GET     /events/:id/resources                                                controllers.ResourcesController.getAllResources(id: Int)
 PUT     /events/:eventId/resources/:resourceId/stock/:stockAmount            controllers.ResourcesController.changeResourceAmount(eventId: Int, resourceId: Int, stockAmount: Int)
 
+# attendant actions
+GET     /employees/:employeeName  controllers.EmployeesController.getEmployeesBy(employeeName)
+
 # evolutions trigger
 GET     /evolutions                 controllers.EvolutionsController.executeEvolutions

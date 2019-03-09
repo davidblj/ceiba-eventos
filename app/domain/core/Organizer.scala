@@ -1,7 +1,7 @@
 package domain.core
 
-import domain.models.{Attendant, Event, Resource}
-import domain.repositories.{AttendantRepository, EventRepository, LocationRepository}
+import domain.models.{Employee, Event, Resource}
+import domain.repositories.{EmployeeRepository, EventRepository, LocationRepository}
 import domain.value_objects.{EventResources, Fail, Location, ResourceQuantityAmount}
 import javax.inject.Inject
 
@@ -10,7 +10,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 // todo: move this class into a new package (think out the aggregate structure)
 class Organizer @Inject() (eventRepository: EventRepository, locationRepository: LocationRepository,
-                           attendantRepository: AttendantRepository) {
+                           employeeRepository: EmployeeRepository) {
 
   def launch(event: Event): Future[Int] = {
     // todo: handle every property requirement (empty resource list & properties characters length -in the model-)
@@ -86,7 +86,7 @@ class Organizer @Inject() (eventRepository: EventRepository, locationRepository:
     } yield operationResult
   }
 
-  def getAttendantsBy(attendantName: String): Future[List[Attendant]] = {
-    this.attendantRepository.getBy(attendantName)
+  def getEmployeesBy(employeeName: String): Future[List[Employee]] = {
+    this.employeeRepository.getBy(employeeName)
   }
 }

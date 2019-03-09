@@ -2,9 +2,9 @@ package infrastructure.slick.entities
 
 import slick.jdbc.MySQLProfile.api._
 
-case class Attendant(id: Int = 0, fullName: String)
+case class Employee(id: Int = 0, fullName: String)
 
-class AttendantTable(tag: Tag) extends Table[Attendant](tag, "attendant"){
+class EmployeeTable(tag: Tag) extends Table[Employee](tag, "employee"){
 
   // PK
   def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
@@ -12,5 +12,5 @@ class AttendantTable(tag: Tag) extends Table[Attendant](tag, "attendant"){
   // Fields
   def fullName = column[String]("full_name")
 
-  def * = (id, fullName) <> (Attendant.tupled, Attendant.unapply)
+  def * = (id, fullName) <> (Employee.tupled, Employee.unapply)
 }

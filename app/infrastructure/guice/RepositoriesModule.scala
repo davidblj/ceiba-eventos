@@ -1,8 +1,8 @@
 package infrastructure.guice
 
 import com.google.inject.AbstractModule
-import domain.repositories.{AttendantRepository, EventRepository, LocationRepository}
-import infrastructure.slick.repositories.{SlickAttendantRepository, SlickEventRepository, SlickLocationRepository, SlickResourceRepository}
+import domain.repositories.{EmployeeRepository, EventRepository, LocationRepository}
+import infrastructure.slick.repositories.{SlickEmployeeRepository, SlickEventRepository, SlickLocationRepository, SlickResourceRepository}
 
 class RepositoriesModule extends AbstractModule {
 
@@ -10,7 +10,7 @@ class RepositoriesModule extends AbstractModule {
 
    bind(classOf[EventRepository]).to(classOf[SlickEventRepository])
    bind(classOf[LocationRepository]).to(classOf[SlickLocationRepository])
-   bind(classOf[AttendantRepository]).to(classOf[SlickAttendantRepository])
+   bind(classOf[EmployeeRepository]).to(classOf[SlickEmployeeRepository])
    bind(classOf[SlickResourceRepository])
   }
 }
