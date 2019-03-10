@@ -1,7 +1,7 @@
 package controllers
 
 import application.actions.events.{ChangeResourceAmount, GetAllResources}
-import domain.value_objects.{Fail, ResourceQuantityAmount}
+import domain.value_objects.{Fail, ResourceSharedAmount}
 import infrastructure.play.json.Validator
 import infrastructure.play.json.writes.ResourcesWrites.eventResourcesWrites
 import javax.inject.Inject
@@ -29,7 +29,7 @@ class ResourcesController @Inject()(cc: ControllerComponents, GetAllResources: G
   def changeResourceAmount(eventId: Int, resourceId: Int, deliveredAmount: Int): Action[AnyContent] = Action.async {
     _ => {
 
-      val resourceStock = ResourceQuantityAmount(deliveredAmount, resourceId)
+      val resourceStock = ResourceSharedAmount(deliveredAmount, resourceId)
       ChangeResourceAmount.execute(resourceStock).map(_ => {
         NoContent
       }).recover({

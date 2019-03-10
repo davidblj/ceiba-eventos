@@ -11,7 +11,7 @@ import scala.concurrent.ExecutionContext
 
 class EmployeesController @Inject()(cc: ControllerComponents, getEmployeesByName: GetEmployeesByName, validator: Validator)
                                    (implicit ec: ExecutionContext)
-                                   extends AbstractController(cc){
+                                   extends AbstractController(cc) {
 
   def getEmployeesBy(employeeName: String): Action[AnyContent] = Action.async {
     _ => {

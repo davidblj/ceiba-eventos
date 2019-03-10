@@ -1,8 +1,8 @@
 package infrastructure.slick.repositories
 
-import domain.models.{Event, Input, Resource}
+import domain.models.{Event, Input, Resource, Attendant}
 import domain.repositories.EventRepository
-import domain.value_objects.{Location, ResourceQuantityAmount}
+import domain.value_objects.{Location, ResourceSharedAmount}
 import infrastructure.slick.entities
 import infrastructure.slick.entities._
 import infrastructure.slick.transformers._
@@ -12,7 +12,9 @@ import slick.jdbc.JdbcProfile
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvider, val slickResourceRepository: SlickResourceRepository)
+class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvider,
+                                      val slickResourceRepository: SlickResourceRepository,
+                                      val slickAttendantRepository: SlickAttendantRepository)
                                      (implicit ec: ExecutionContext)
                                      extends HasDatabaseConfigProvider[JdbcProfile] with EventRepository {
 
@@ -42,12 +44,12 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
     // todo: handle slick errors
     for {
       event <- createEvent(event)
-      _ <- insertResources(event.resources, event.eventId.get)
-      _ <- insertInputsHandler(event.inputs, event.eventId.get)
+      _     <- insertResources(event.resources, event.eventId.get)
+      _     <- insertInputsHandler(event.inputs, event.eventId.get)
     } yield event.eventId.get
   }
 
-  override def addLocation(location: Location): Future[Int] = {
+  override def add(location: Location): Future[Int] = {
 
     // todo: move this method into the location repo
     def insertLocation(): Future[Int] = {
@@ -67,8 +69,12 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
     // todo: handle slick errors
     for {
       locationId <- insertLocation()
-      _ <- insertEventLocation(locationId)
+      _          <- insertEventLocation(locationId)
     } yield locationId
+  }
+
+  override def add(attendant: Attendant): Future[Int] = {
+    slickAttendantRepository.add(attendant)
   }
 
   override def getBy(id: Int): Future[Event] = {
@@ -81,7 +87,7 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
 
     for {
       basicEventInformation <- getBasicEventInformation
-      resources <- getResourcesBy(id)
+      resources             <- getResourcesBy(id)
     } yield EventTransformer.toDomainObject(basicEventInformation, resources)
   }
 
@@ -89,10 +95,11 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
     slickResourceRepository.getBy(resourceId)
   }
 
-  override def set(resourceQuantityAmount: ResourceQuantityAmount): Future[Int] = {
+  override def set(resourceQuantityAmount: ResourceSharedAmount): Future[Int] = {
     slickResourceRepository.set(resourceQuantityAmount)
   }
 
+  // todo: remove these methods, they are one liners
   def getResourcesBy(eventId: Int): Future[Seq[Resource]] = {
     slickResourceRepository.getAllResourcesBy(eventId)
   }

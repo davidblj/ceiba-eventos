@@ -1,12 +1,12 @@
 package domain.core
 
-import domain.models.{Employee, Event, Resource}
+import domain.models.{Attendant, Employee, Event, Resource}
 import domain.repositories.{EmployeeRepository, EventRepository, LocationRepository}
-import domain.value_objects.{EventResources, Fail, Location, ResourceQuantityAmount}
+import domain.value_objects.{EventResources, Fail, Location, ResourceSharedAmount}
 import javax.inject.Inject
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 // todo: move this class into a new package (think out the aggregate structure)
 class Organizer @Inject() (eventRepository: EventRepository, locationRepository: LocationRepository,
@@ -19,7 +19,7 @@ class Organizer @Inject() (eventRepository: EventRepository, locationRepository:
 
   def subscribe(location: Location): Future[Int] = {
     // todo: handle a non existent event id (get event by id, -in the repo-)
-    eventRepository.addLocation(location)
+    eventRepository.add(location)
   }
 
   def lookUpRegisteredLocations(): Future[Seq[String]] = {
@@ -32,14 +32,14 @@ class Organizer @Inject() (eventRepository: EventRepository, locationRepository:
                    .map(event => EventResources(event.favoriteResource, event.resources))
   }
 
-  // update `resource` set `quantity` = 0 where `resource`.`id` = 16
-  def set(resourceQuantityAmount: ResourceQuantityAmount): Future[None.type] = {
+  // todo: move out the logic to somewhere else (reduce complexity)
+  def set(resourceSharedAmount: ResourceSharedAmount): Future[None.type] = {
 
-    def checkIllegalQuantityAmountFor(storedResource: Resource): Future[None.type] = {
+    def checkIllegalSharedAmountFor(storedResource: Resource): Future[None.type] = {
 
       val validationResult =
         if (storedResource.stock.isDefined) {
-          compareIncomingResourceQuantityAmountAndResourceStock(storedResource)
+          compareIncomingResourceWithStoredResourceStock(storedResource)
         } else {
           Right(Unit)
         }
@@ -50,23 +50,23 @@ class Organizer @Inject() (eventRepository: EventRepository, locationRepository:
       }
     }
 
-    def compareIncomingResourceQuantityAmountAndResourceStock(storedResource: Resource): Either[Fail, Unit.type] = {
+    def compareIncomingResourceWithStoredResourceStock(storedResource: Resource): Either[Fail, Unit.type] = {
 
       val availableStock = storedResource.stock.get - storedResource.quantity.getOrElse(0)
-      val newResourceQuantityAmountIsIllegal = resourceQuantityAmount.amount > availableStock
+      val newSharedResourceAmountIsIllegal = resourceSharedAmount.amount > availableStock
 
-      if (newResourceQuantityAmountIsIllegal) {
+      if (newSharedResourceAmountIsIllegal) {
         Left(Fail(s"This resource available stock is $availableStock, " +
-                  s"and ${resourceQuantityAmount.amount} already surpasses that amount."))
+                  s"and ${resourceSharedAmount.amount} already surpasses that amount."))
       } else {
         Right(Unit)
       }
     }
 
-    def setNewResourceQuantityFrom(storedResource: Resource): Future[Int] = {
+    def setNewResourceQuantityTo(storedResource: Resource): Future[Int] = {
 
-      val mergedQuantity = storedResource.quantity.getOrElse(0) + resourceQuantityAmount.amount
-      val mergedResourceQuantityAmount = ResourceQuantityAmount(mergedQuantity, resourceQuantityAmount.id)
+      val mergedQuantity = storedResource.quantity.getOrElse(0) + resourceSharedAmount.amount
+      val mergedResourceQuantityAmount = ResourceSharedAmount(mergedQuantity, resourceSharedAmount.id)
       eventRepository.set(mergedResourceQuantityAmount)
     }
 
@@ -79,9 +79,9 @@ class Organizer @Inject() (eventRepository: EventRepository, locationRepository:
     }
 
     for {
-      storedResource   <- eventRepository.getResourceBy(resourceQuantityAmount.id)
-      _                <- checkIllegalQuantityAmountFor(storedResource)
-      changedRowsInDB  <- setNewResourceQuantityFrom(storedResource)
+      storedResource   <- eventRepository.getResourceBy(resourceSharedAmount.id)
+      _                <- checkIllegalSharedAmountFor(storedResource)
+      changedRowsInDB  <- setNewResourceQuantityTo(storedResource)
       operationResult  <- check(changedRowsInDB)
     } yield operationResult
   }
@@ -90,7 +90,7 @@ class Organizer @Inject() (eventRepository: EventRepository, locationRepository:
     this.employeeRepository.getBy(employeeName)
   }
 
-  def signUpAttendant() = {
-
+  def signUp(attendant: Attendant): Future[Int] = {
+    eventRepository.add(attendant)
   }
 }

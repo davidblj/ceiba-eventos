@@ -13,7 +13,7 @@ CREATE TABLE attendant_assigned_resource (
     resource_id INT,
     FOREIGN KEY (resource_id) REFERENCES resource(id),
 
-    assigned_amount INT
+    shared_amount INT
 );
 
 # --- !Downs

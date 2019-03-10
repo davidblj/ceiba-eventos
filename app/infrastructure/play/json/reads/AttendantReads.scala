@@ -1,20 +1,23 @@
 package infrastructure.play.json.reads
 
-import application.transfer_objects.{AssignedResource, Attendant}
+import application.transfer_objects.{Attendant, AttendantAssignedResource}
 import play.api.libs.json.{JsPath, Reads}
 import play.api.libs.json.Reads._
 import play.api.libs.functional.syntax._
 
 object AttendantReads {
 
-  /*// todo: verifying that is positive.
-  implicit val assignedResourceReads: Reads[AssignedResource] = (
+  implicit val assignedResourceReads: Reads[AttendantAssignedResource] = (
     (JsPath \ "resource_id").read[Int] and
-    (JsPath \ "assignedAmount").read[Int]
-  )(AssignedResource.apply _)
+    (JsPath \ "shared_amount").read[Int](verifying(isIntPositive))
+  )(AttendantAssignedResource.apply _)
 
-  implicit val attendant: Reads[Attendant] = {
-    (JsPath \ "full_name").read[String](minLength[String](3) keepAnd maxLength[String](24)) and
-      (JsPath \ "assigned_resources").read[List]
-  }*/
+  implicit val attendant: Reads[Attendant] = (
+    (JsPath \ "event_id").read[Int] and
+    (JsPath \ "employee").read[String](minLength[String](3) keepAnd maxLength[String](24)) and
+    (JsPath \ "employee_id").read[Int] and
+    (JsPath \ "assigned_resources").read[List[AttendantAssignedResource]]
+  )(Attendant.apply _)
+
+  private def isIntPositive(i: Int) = i > 0
 }

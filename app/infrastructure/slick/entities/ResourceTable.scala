@@ -23,5 +23,7 @@ class ResourceTable(tag: Tag) extends Table[Resource](tag, "resource"){
 
   def * = (id, event_id, name, description, price, stock, quantity) <>
                              (Resource.tupled, Resource.unapply)
+
+  // Tables
   val eventTable = TableQuery[EventTable]
 }
