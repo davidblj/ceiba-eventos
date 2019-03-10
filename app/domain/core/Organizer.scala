@@ -22,7 +22,7 @@ class Organizer @Inject() (eventRepository: EventRepository, locationRepository:
     eventRepository.addLocation(location)
   }
 
-  def lookUpEveryLocation(): Future[Seq[String]] = {
+  def lookUpRegisteredLocations(): Future[Seq[String]] = {
     // todo: use the event repository, and not the location repository
     locationRepository.getAll
   }
@@ -88,5 +88,9 @@ class Organizer @Inject() (eventRepository: EventRepository, locationRepository:
 
   def getEmployeesBy(employeeName: String): Future[List[Employee]] = {
     this.employeeRepository.getBy(employeeName)
+  }
+
+  def signUpAttendant() = {
+
   }
 }

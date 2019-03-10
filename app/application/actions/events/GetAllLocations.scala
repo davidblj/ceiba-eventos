@@ -8,6 +8,6 @@ import scala.concurrent.Future
 class GetAllLocations @Inject() (organizer: Organizer) {
 
   def execute(): Future[Seq[String]] = {
-    organizer.lookUpEveryLocation()
+    organizer.lookUpRegisteredLocations()
   }
 }

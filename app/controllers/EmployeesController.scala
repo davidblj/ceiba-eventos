@@ -1,6 +1,6 @@
 package controllers
 
-import application.actions.attendant.GetEmployeesByName
+import application.actions.employees.GetEmployeesByName
 import infrastructure.play.json.Validator
 import infrastructure.play.json.writes.EmployeesWrites._
 import javax.inject.Inject
