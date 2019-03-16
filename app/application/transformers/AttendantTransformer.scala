@@ -11,6 +11,6 @@ object AttendantTransformer {
       AttendantAssignedResource(assignedResource.resourceId, assignedResource.sharedAmount, None, None)
     })
 
-    Attendant(attendant.eventId, attendant.employee, attendant.employeeId, domainAttendantAssignedResourceObject, None)
+    Attendant(attendant.eventId, None, attendant.employeeId, domainAttendantAssignedResourceObject, None)
   }
 }

@@ -14,7 +14,6 @@ object AttendantReads {
 
   implicit val attendant: Reads[Attendant] = (
     (JsPath \ "event_id").read[Int] and
-    (JsPath \ "employee").read[String](minLength[String](3) keepAnd maxLength[String](24)) and
     (JsPath \ "employee_id").read[Int] and
     (JsPath \ "assigned_resources").read[List[AttendantAssignedResource]]
   )(Attendant.apply _)

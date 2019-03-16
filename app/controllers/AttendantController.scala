@@ -17,7 +17,6 @@ class AttendantController @Inject()(cc: ControllerComponents, SignUpAttendant: S
   // todo: 1, the assigned resource exists
   // todo: 2, the event id exists
   // todo: 3, the employee id exists
-  // todo: remove the employee from this post payload
   def signUpAttendant(): Action[Attendant] = Action.async(validator.validateJson[Attendant]) {
     request => {
 
