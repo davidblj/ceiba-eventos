@@ -2,7 +2,7 @@ package domain.models
 
 case class Event(name: String,
                  resources: List[Resource],
-                 favoriteResource: Option[String],
+                 favoriteResource: Option[String] = None,
                  description: Option[String] = None,
                  inputs: Option[List[Input]] = None,
                  eventId: Option[Int] = None) {
