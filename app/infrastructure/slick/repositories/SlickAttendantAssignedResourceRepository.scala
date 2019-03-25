@@ -24,4 +24,12 @@ class SlickAttendantAssignedResourceRepository @Inject() (val dbConfigProvider: 
     val query = attendantAssignedResourceTable ++= attendantAssignedResourceSeq
     db.run(query)
   }
+
+  def getAllBy(attendantId: Int): Future[List[AttendantAssignedResource]] = {
+
+    val query = attendantAssignedResourceTable.filter(_.attendant_id === attendantId).result
+    db.run(query).map(attendantsAssignedResources =>
+      AttendantAssignedResourceTransformer.toDomainObjectList(attendantsAssignedResources.toList
+    ))
+  }
 }

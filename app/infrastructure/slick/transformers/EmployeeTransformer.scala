@@ -1,19 +1,19 @@
 package infrastructure.slick.transformers
 
 import domain.models.Employee
-import infrastructure.slick.entities.{Employee => AttendantTableObject}
+import infrastructure.slick.entities.{Employee => EmployeeTableObject}
 
 object EmployeeTransformer {
 
-  def toTableObject(attendant: Employee): Unit = {
-    AttendantTableObject(fullName = attendant.fullName)
+  def toTableObject(employee: Employee): Unit = {
+    EmployeeTableObject(fullName = employee.fullName)
   }
 
-  def toDomainObjectList(attendants: Seq[AttendantTableObject]): List[Employee] = {
-    attendants.map(attendant => toDomainObject(attendant)).toList
+  def toDomainObjectList(employee: Seq[EmployeeTableObject]): List[Employee] = {
+    employee.map(attendant => toDomainObject(attendant)).toList
   }
 
-  def toDomainObject(attendant: AttendantTableObject): Employee = {
-    Employee(attendant.fullName, Some(attendant.id))
+  def toDomainObject(employee: EmployeeTableObject): Employee = {
+    Employee(employee.fullName, Some(employee.id))
   }
 }

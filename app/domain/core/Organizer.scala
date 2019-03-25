@@ -1,6 +1,6 @@
 package domain.core
 
-import domain.models.{Attendant, Employee, Event, Resource}
+import domain.models._
 import domain.repositories.{EmployeeRepository, EventRepository, LocationRepository}
 import domain.value_objects.{EventResources, Fail, Location, ResourceSharedAmount}
 import javax.inject.Inject
@@ -32,7 +32,6 @@ class Organizer @Inject() (eventRepository: EventRepository, locationRepository:
                    .map(event => EventResources(event.favoriteResource, event.resources))
   }
 
-  // todo: move out the logic to somewhere else (reduce complexity)
   def set(resourceSharedAmount: ResourceSharedAmount): Future[None.type] = {
 
     def checkIllegalSharedAmountFor(storedResource: Resource): Future[None.type] = {
@@ -86,8 +85,12 @@ class Organizer @Inject() (eventRepository: EventRepository, locationRepository:
     } yield operationResult
   }
 
-  def getEmployeesBy(employeeName: String): Future[List[Employee]] = {
+  def searchEmployeesBy(employeeName: String): Future[List[Employee]] = {
     this.employeeRepository.getBy(employeeName)
+  }
+
+  def summarizeEventBy(eventId: Int): Future[EventSummary] = {
+    eventRepository.getSummaryBy(eventId)
   }
 
   def signUp(attendant: Attendant): Future[Int] = {

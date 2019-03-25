@@ -10,6 +10,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class GetEmployeesByName @Inject()(organizer: Organizer)  {
 
   def execute(employeeName: String): Future[Employees] = {
-    organizer.getEmployeesBy(employeeName).map(employees => Employees(employees))
+    organizer.searchEmployeesBy(employeeName).map(employees => Employees(employees))
   }
 }

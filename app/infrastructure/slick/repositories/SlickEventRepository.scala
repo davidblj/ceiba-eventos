@@ -1,6 +1,6 @@
 package infrastructure.slick.repositories
 
-import domain.models.{Event, Input, Resource, Attendant}
+import domain.models.{Event, Input, Resource, Attendant, EventSummary}
 import domain.repositories.EventRepository
 import domain.value_objects.{Location, ResourceSharedAmount}
 import infrastructure.slick.entities
@@ -44,7 +44,7 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
     // todo: handle slick errors
     for {
       event <- createEvent(event)
-      _     <- insertResources(event.resources, event.eventId.get)
+      _     <- slickResourceRepository.add(event.resources, event.eventId.get)
       _     <- insertInputsHandler(event.inputs, event.eventId.get)
     } yield event.eventId.get
   }
@@ -79,16 +79,25 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
 
   override def getBy(id: Int): Future[Event] = {
 
-    // todo: attach its inputs
     def getBasicEventInformation: Future[entities.Event] = {
-      val query = eventTable.result.head
+      val query = eventTable.filter(_.id === id).result.head
       db.run(query)
     }
 
+    // todo: build the object with the necessary fields,
     for {
       basicEventInformation <- getBasicEventInformation
-      resources             <- getResourcesBy(id)
+      resources             <- slickResourceRepository.getAllResourcesBy(id)
     } yield EventTransformer.toDomainObject(basicEventInformation, resources)
+  }
+
+  override def getSummaryBy(id: Int): Future[EventSummary] = {
+
+    for {
+      resources  <- slickResourceRepository.getAllResourcesBy(id)
+      event      <- getBy(id)
+      attendants <- slickAttendantRepository.getAttendantsBy(id)
+    } yield EventSummary(event.name, resources.toList, attendants)
   }
 
   override def getResourceBy(resourceId: Int): Future[Resource] = {
@@ -99,18 +108,9 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
     slickResourceRepository.set(resourceQuantityAmount)
   }
 
-  // todo: remove these methods, they are one liners
-  def getResourcesBy(eventId: Int): Future[Seq[Resource]] = {
-    slickResourceRepository.getAllResourcesBy(eventId)
-  }
-
-  def insertResources(resources: List[Resource], eventId: Int): Future[Any] = {
-    slickResourceRepository.add(resources, eventId)
-  }
-
+  // todo: use an input repo, and use it through this class
   def insertInputs(inputs: List[Input], eventId: Int): Future[Any] = {
 
-    // todo: use an input repo, and use it through this class
     val inputTableSeq = InputTransformer.toTableObjectList(inputs, eventId)
     val query = inputTable ++= inputTableSeq
     db.run(query)

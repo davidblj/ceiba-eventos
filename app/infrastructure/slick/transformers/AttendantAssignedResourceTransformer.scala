@@ -15,6 +15,23 @@ object AttendantAssignedResourceTransformer {
 
   def toTableObjectList(attendantAssignedResources: List[AttendantAssignedResource], attendantId: Int)
                        : List[AttendantAssignedResourceTableObject] = {
+
     attendantAssignedResources.map(attendantAssignedResource => toTableObject(attendantAssignedResource, attendantId))
+  }
+
+  def toDomainObject(attendantAssignedResourceTableObject: AttendantAssignedResourceTableObject)
+                        : AttendantAssignedResource = {
+
+    AttendantAssignedResource(
+      attendantAssignedResourceTableObject.resource_id,
+      attendantAssignedResourceTableObject.shared_amount,
+      Some(attendantAssignedResourceTableObject.attendant_id),
+      Some(attendantAssignedResourceTableObject.id))
+  }
+
+  def toDomainObjectList(attendantAssignedResourceTableObjectList: List[AttendantAssignedResourceTableObject])
+                        : List[AttendantAssignedResource] = {
+
+    attendantAssignedResourceTableObjectList.map(attendantAssignedResource => toDomainObject(attendantAssignedResource))
   }
 }

@@ -22,4 +22,10 @@ class SlickEmployeeRepository @Inject()(val dbConfigProvider: DatabaseConfigProv
     val query = employeeTable.filter(_.fullName like s"%$employeeName%").result
     db.run(query).map(employee => EmployeeTransformer.toDomainObjectList(employee))
   }
+
+  def getBy(employeeId: Int): Future[Employee] = {
+
+    val query = employeeTable.filter(_.id === employeeId).result.head
+    db.run(query).map(employee => EmployeeTransformer.toDomainObject(employee))
+  }
 }

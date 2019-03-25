@@ -11,7 +11,7 @@ class SignUpAttendant @Inject()(organizer: Organizer) {
 
   def execute(attendant: Attendant): Future[Int] = {
 
-    val domainAttendantObject = AttendantTransformer.applicationToDomainObject(attendant)
+    val domainAttendantObject = AttendantTransformer.toDomainObject(attendant)
     organizer.signUp(domainAttendantObject)
   }
 }

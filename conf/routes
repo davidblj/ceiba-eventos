@@ -2,6 +2,7 @@
 
 # event actions
 POST    /events                     controllers.EventController.createEvent
+GET     /events/:id                 controllers.EventController.getEvent(id: Int)
 
 # location actions
 POST    /events/locations           controllers.LocationController.addEventLocation
