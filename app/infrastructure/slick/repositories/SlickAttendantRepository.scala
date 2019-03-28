@@ -84,6 +84,7 @@ class SlickAttendantRepository @Inject() (val dbConfigProvider: DatabaseConfigPr
         Attendant(eventId, Some(attendant._3), attendant._2, attendant._4, Some(attendant._1))).toList
     }
 
+    // todo: assign the resource name into the assigned resources list
     for {
       attendantsAndEmployees               <- getAttendantsAndEmployees
       employeesNames                       <- getEmployeesNamesFrom(attendantsAndEmployees.map(tuple => tuple._2))
