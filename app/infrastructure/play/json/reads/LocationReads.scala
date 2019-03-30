@@ -12,4 +12,3 @@ object LocationReads {
     (JsPath \ "name").read[String](minLength[String](3) keepAnd maxLength[String](24))
   )(Location.apply _)
 }
-

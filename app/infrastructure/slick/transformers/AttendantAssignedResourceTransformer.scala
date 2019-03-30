@@ -24,6 +24,7 @@ object AttendantAssignedResourceTransformer {
 
     AttendantAssignedResource(
       attendantAssignedResourceTableObject.resource_id,
+      None,
       attendantAssignedResourceTableObject.shared_amount,
       Some(attendantAssignedResourceTableObject.attendant_id),
       Some(attendantAssignedResourceTableObject.id))

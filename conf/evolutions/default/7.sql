@@ -3,7 +3,6 @@
 
 # --- !Ups
 
-# --- TODO: set the primary key as a combination of event_id, and employee_id
 CREATE TABLE attendant (
     id INT AUTO_INCREMENT PRIMARY KEY,
 
@@ -11,7 +10,10 @@ CREATE TABLE attendant (
     FOREIGN KEY (event_id) REFERENCES event(id),
 
     employee_id INT,
-    FOREIGN KEY (employee_id) REFERENCES employee(id)
+    FOREIGN KEY (employee_id) REFERENCES employee(id),
+
+    location_id INT,
+    FOREIGN KEY (location_id) REFERENCES location(id)
 );
 
 # --- !Downs

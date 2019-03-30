@@ -51,7 +51,7 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
 
   override def add(location: Location): Future[Int] = {
 
-    // todo: move this method into the location repo
+    // todo: move this method into the location and event location repo
     def insertLocation(): Future[Int] = {
 
       val locationTableObject = LocationTransformer.toTableObject(location.name)

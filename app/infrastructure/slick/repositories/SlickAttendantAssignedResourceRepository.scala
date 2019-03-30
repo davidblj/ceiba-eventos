@@ -1,7 +1,8 @@
 package infrastructure.slick.repositories
 
 import domain.models.AttendantAssignedResource
-import infrastructure.slick.entities.AttendantAssignedResourceTable
+import infrastructure.slick.entities
+import infrastructure.slick.entities.{AttendantAssignedResourceTable, ResourceTable}
 import infrastructure.slick.transformers.AttendantAssignedResourceTransformer
 import javax.inject.Inject
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
@@ -17,6 +18,8 @@ class SlickAttendantAssignedResourceRepository @Inject() (val dbConfigProvider: 
 
   val attendantAssignedResourceTable = TableQuery[AttendantAssignedResourceTable]
 
+  val resourceTable = TableQuery[ResourceTable]
+
   def add(attendantAssignedResources: List[AttendantAssignedResource], attendantId: Int): Future[Any] = {
 
     val attendantAssignedResourceSeq = AttendantAssignedResourceTransformer
@@ -31,5 +34,16 @@ class SlickAttendantAssignedResourceRepository @Inject() (val dbConfigProvider: 
     db.run(query).map(attendantsAssignedResources =>
       AttendantAssignedResourceTransformer.toDomainObjectList(attendantsAssignedResources.toList
     ))
+  }
+
+  def getBy(attendantId: Int): Future[Seq[AttendantAssignedResource]] = {
+
+    val query = attendantAssignedResourceTable join resourceTable on (_.resource_id === _.id)
+    db.run(query.result)
+      .map(assignedResources => assignedResources
+      .map { case(assignedResource, resource) =>
+        AttendantAssignedResource(assignedResource.resource_id, Some(resource.name), assignedResource.shared_amount,
+                                  Some(assignedResource.attendant_id), Some(assignedResource.id))
+      })
   }
 }

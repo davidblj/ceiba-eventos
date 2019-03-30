@@ -1,23 +1,29 @@
 package infrastructure.slick.repositories
 
-import domain.models.{Attendant, AttendantAssignedResource}
-import infrastructure.slick.entities.AttendantTable
+import domain.models.{Attendant, AttendantAssignedResource, Resource}
+import infrastructure.slick.entities
+import infrastructure.slick.entities._
 import infrastructure.slick.transformers._
 import javax.inject.Inject
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.jdbc.JdbcProfile
+import slick.lifted.QueryBase
 
+import scala.collection.immutable
 import scala.concurrent.{ExecutionContext, Future}
 
 class SlickAttendantRepository @Inject() (val dbConfigProvider: DatabaseConfigProvider,
                                           val attendantAssignedResourceRepository: SlickAttendantAssignedResourceRepository,
+                                          val resourceRepository: SlickResourceRepository,
                                           val employeeRepository: SlickEmployeeRepository)
                                          (implicit ec: ExecutionContext)
                                          extends HasDatabaseConfigProvider[JdbcProfile] {
 
   import profile.api._
-
   val attendantTable = TableQuery[AttendantTable]
+  val locationTable = TableQuery[LocationTable]
+  val employeeTable = TableQuery[EmployeeTable]
+  val assignedResourcesTable = TableQuery[AttendantAssignedResourceTable]
 
   def add(attendant: Attendant): Future[Int] = {
 
@@ -36,63 +42,57 @@ class SlickAttendantRepository @Inject() (val dbConfigProvider: DatabaseConfigPr
 
   def getAttendantsBy(eventId: Int): Future[List[Attendant]] = {
 
-    def getAttendantsAndEmployees : Future[Seq[(Int, Int)]] = {
+    def fetchAttendants(): Future[List[(Int, String, Int, String, Int, Int)]] = {
 
-      val query = attendantTable.filter(_.event_id === eventId).result
-      db.run(query)
-        .map(attendants => attendants
-        .map(attendant => (attendant.id, attendant.employee_id)))
+      db.run(flat(attendantsQuery()).result)
+        .map(attendants => attendants.toList)
     }
 
-    def getEmployeesNamesFrom(employeesIds: Seq[Int]): Future[Seq[String]] = {
+    def attendantsQuery(): Query[((AttendantTable, LocationTable), EmployeeTable),
+                                 ((entities.Attendant, Location), Employee), Seq] = {
 
-      val employeesNames = employeesIds.map(employeeId => getEmployeeNameBy(employeeId))
-      Future.sequence(employeesNames)
+      val attendantsAndLocations = attendantTable join locationTable on (_.location_id === _.id)
+      val attendantsAndEmployees = attendantsAndLocations join employeeTable on (_._1.employee_id === _.id)
+      attendantsAndEmployees filter { case ((attendant, _), _) => attendant.event_id === eventId }
     }
 
-    def getEmployeeNameBy(employeeId: Int): Future[String] = {
+    def flat(query: Query[((AttendantTable, LocationTable), EmployeeTable),
+            ((entities.Attendant, Location), Employee), Seq]) = {
 
-      employeeRepository.getBy(employeeId).map(employee => employee.fullName)
+      query map { case ((attendant, location), employee) =>
+        (eventId, employee.fullName, employee.id, location.name, location.id, attendant.id)
+      }
     }
 
-    def mergeAttendantsAndEmployeesWithEmployeesNames(attendantsTuples: Seq[(Int, Int)], employeesNames: Seq[String])
-                                                     : Future[Seq[(Int, Int, String)]] = {
+    def attendantsIdsIn(tuples: List[(Int, String, Int, String, Int, Int)]) = {
+      tuples.map(tuple => tuple._6)
+    }
 
-      Future.successful(attendantsTuples zip employeesNames map {
-        case ((attendantId, employeeId), employeeName) => (attendantId, employeeId, employeeName)
+    def getResourcesFrom(attendantsIds: List[Int]): Future[List[List[AttendantAssignedResource]]] = {
+
+      val resourcesPerAttendant = attendantsIds
+        .map(attendantId => attendantAssignedResourceRepository.getAllBy(attendantId))
+      Future.sequence(resourcesPerAttendant)
+    }
+
+    def mergeAttendantsWithResources(attendants: List[(Int, String, Int, String, Int, Int)],
+                                     resources: List[List[AttendantAssignedResource]])
+                                     : Future[List[(Int, String, Int, String, Int, Int, List[AttendantAssignedResource])]] = {
+
+      Future.successful(attendants zip resources map {
+        case (attendant, attendantResources) => (attendant._1, attendant._2, attendant._3, attendant._4, attendant._5,
+                                                 attendant._6, attendantResources)
       })
     }
 
-    def getAssignedResourcesFrom(attendantsIds: Seq[Int]): Future[Seq[List[AttendantAssignedResource]]] = {
-
-      val assignedResources = attendantsIds.map(attendantId => attendantAssignedResourceRepository.getAllBy(attendantId))
-      Future.sequence(assignedResources)
+    def map(tuple: (Int, String, Int, String, Int, Int, List[AttendantAssignedResource])): Attendant = {
+      Attendant(tuple._1, Some(tuple._2), tuple._3, Some(tuple._4), tuple._5, tuple._7, Some(tuple._6))
     }
 
-    def mergeAttendantsDataWithAssignedResources(attendantsData: Seq[(Int, Int, String)],
-                                                assignedResources: Seq[List[AttendantAssignedResource]])
-                                                : Future[Seq[(Int, Int, String, List[AttendantAssignedResource])]] = {
-
-      Future.successful(attendantsData zip assignedResources map {
-        case ((attendantId, employeeId, employeeName), assignedResource) =>
-          (attendantId, employeeId, employeeName, assignedResource)
-      })
-    }
-
-    def transform(attendantsTuple: Seq[(Int, Int, String, List[AttendantAssignedResource])]): List[Attendant] = {
-      attendantsTuple.map(attendant =>
-        Attendant(eventId, Some(attendant._3), attendant._2, attendant._4, Some(attendant._1))).toList
-    }
-
-    // todo: assign the resource name into the assigned resources list
     for {
-      attendantsAndEmployees               <- getAttendantsAndEmployees
-      employeesNames                       <- getEmployeesNamesFrom(attendantsAndEmployees.map(tuple => tuple._2))
-      attendantsEmployeesAndEmployeesNames <- mergeAttendantsAndEmployeesWithEmployeesNames(attendantsAndEmployees,
-                                              employeesNames)
-      attendantsAssignedResources          <- getAssignedResourcesFrom(attendantsEmployeesAndEmployeesNames.map(tuple => tuple._1))
-      attendants                           <- mergeAttendantsDataWithAssignedResources(attendantsEmployeesAndEmployeesNames,
-                                              attendantsAssignedResources)
-    } yield transform(attendants)
+      attendants          <- fetchAttendants()
+      resources           <- getResourcesFrom(attendantsIdsIn(attendants))
+      attendantsSummary   <- mergeAttendantsWithResources(attendants, resources)
+    } yield attendantsSummary.map(attendantSummary => map(attendantSummary))
   }
 }

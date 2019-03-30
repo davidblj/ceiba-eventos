@@ -8,9 +8,10 @@ object AttendantTransformer {
   def toDomainObject(attendant: AttendantAppObject): Attendant = {
 
     val domainAttendantAssignedResourceObject = attendant.assignedResources.map(assignedResource => {
-      AttendantAssignedResource(assignedResource.resourceId, assignedResource.sharedAmount, None, None)
+      AttendantAssignedResource(assignedResource.resourceId, None, assignedResource.sharedAmount, None, None)
     })
 
-    Attendant(attendant.eventId, None, attendant.employeeId, domainAttendantAssignedResourceObject, None)
+    Attendant(attendant.eventId, None, attendant.employeeId, None, attendant.locationId,
+              domainAttendantAssignedResourceObject, None)
   }
 }

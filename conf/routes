@@ -1,12 +1,12 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 
+# location actions
+GET       /events/locations           controllers.LocationController.getAllLocations
+POST      /events/locations           controllers.LocationController.addEventLocation
+
 # event actions
 POST    /events                     controllers.EventController.createEvent
 GET     /events/:id                 controllers.EventController.getEvent(id: Int)
-
-# location actions
-POST    /events/locations           controllers.LocationController.addEventLocation
-GET     /events/locations           controllers.LocationController.getAllLocations
 
 # resource actions
 GET     /events/:id/resources                                                controllers.ResourcesController.getAllResources(id: Int)

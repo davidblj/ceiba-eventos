@@ -2,7 +2,7 @@ package infrastructure.slick.entities
 
 import slick.jdbc.MySQLProfile.api._
 
-case class Attendant(id: Int = 0, event_id: Int, employee_id: Int)
+case class Attendant(id: Int = 0, event_id: Int, employee_id: Int, location_id: Int)
 
 class AttendantTable(tag: Tag) extends Table[Attendant](tag, "attendant"){
 
@@ -16,9 +16,13 @@ class AttendantTable(tag: Tag) extends Table[Attendant](tag, "attendant"){
   def employee_id = column[Int]("employee_id")
   def employee = foreignKey("employee_fk", event_id, employeeTable)(_.id)
 
-  def * = (id, event_id, employee_id) <> (Attendant.tupled, Attendant.unapply)
+  def location_id = column[Int]("location_id")
+  def location = foreignKey("location_fk", event_id, locationTable)(_.id)
+
+  def * = (id, event_id, employee_id, location_id) <> (Attendant.tupled, Attendant.unapply)
 
   // Tables
   val eventTable = TableQuery[EventTable]
   val employeeTable = TableQuery[EmployeeTable]
+  val locationTable = TableQuery[LocationTable]
 }

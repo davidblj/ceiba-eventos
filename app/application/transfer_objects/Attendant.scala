@@ -1,3 +1,3 @@
 package application.transfer_objects
 
-case class Attendant(eventId: Int, employeeId: Int, assignedResources: List[AttendantAssignedResource])
+case class Attendant(eventId: Int, employeeId: Int, locationId: Int, assignedResources: List[AttendantAssignedResource])
