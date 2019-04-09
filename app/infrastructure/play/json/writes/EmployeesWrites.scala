@@ -1,7 +1,7 @@
 package infrastructure.play.json.writes
 
 import application.transfer_objects.Employees
-import domain.models.Employee
+import domain.entities.Employee
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 

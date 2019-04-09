@@ -1,4 +1,4 @@
-package domain.models
+package domain.entities
 
 case class Input(name: String,
                  price: Float,

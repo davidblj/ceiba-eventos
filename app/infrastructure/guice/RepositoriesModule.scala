@@ -6,6 +6,7 @@ import infrastructure.slick.repositories.{SlickEmployeeRepository, SlickEventRep
 
 class RepositoriesModule extends AbstractModule {
 
+  // todo: check
   override def configure(): Unit = {
 
    bind(classOf[EventRepository]).to(classOf[SlickEventRepository])

@@ -1,6 +1,6 @@
 package infrastructure.slick.transformers
 
-import domain.models.Employee
+import domain.entities.Employee
 import infrastructure.slick.entities.{Employee => EmployeeTableObject}
 
 object EmployeeTransformer {

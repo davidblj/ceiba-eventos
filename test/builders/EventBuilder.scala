@@ -1,6 +1,6 @@
 package builders
 
-import domain.models.{Event, Input, Resource}
+import domain.entities.{Event, Input, Resource}
 
 // todo: https://medium.com/@maximilianofelice/builder-pattern-in-scala-with-phantom-types-3e29a167e863
 class EventBuilder {

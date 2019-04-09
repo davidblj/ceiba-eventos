@@ -1,7 +1,7 @@
 package application.actions.events
 
 import domain.core.Organizer
-import domain.models.EventSummary
+import domain.entities.EventSummary
 import javax.inject.Inject
 
 import scala.concurrent.Future

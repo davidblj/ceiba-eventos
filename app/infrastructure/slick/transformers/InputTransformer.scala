@@ -1,6 +1,6 @@
 package infrastructure.slick.transformers
 
-import domain.models.Input
+import domain.entities.Input
 import infrastructure.slick.entities.{Input => InputTableObject}
 
 object InputTransformer {

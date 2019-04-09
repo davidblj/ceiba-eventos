@@ -1,6 +1,6 @@
 package infrastructure.play.json.writes
 
-import domain.models.Resource
+import domain.entities.Resource
 import domain.value_objects.EventResources
 import play.api.libs.json._
 

@@ -39,5 +39,4 @@ class EventController @Inject()(cc: ControllerComponents, CreateEvent: CreateEve
       })
     }
   }
-
 }

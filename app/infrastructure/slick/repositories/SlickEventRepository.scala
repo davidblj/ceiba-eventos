@@ -1,6 +1,6 @@
 package infrastructure.slick.repositories
 
-import domain.models.{Event, Input, Resource, Attendant, EventSummary}
+import domain.entities.{Attendant, Event, EventSummary, Input, Resource}
 import domain.repositories.EventRepository
 import domain.value_objects.{Location, ResourceSharedAmount}
 import infrastructure.slick.entities
@@ -9,6 +9,7 @@ import infrastructure.slick.transformers._
 import javax.inject.Inject
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.jdbc.JdbcProfile
+import infrastructure.slick.shared.CustomTypesTransformers.parse
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -41,7 +42,6 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
       db.run(query).map(id => event.setId(id))
     }
 
-    // todo: handle slick errors
     for {
       event <- createEvent(event)
       _     <- slickResourceRepository.add(event.resources, event.eventId.get)
@@ -84,7 +84,6 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
       db.run(query)
     }
 
-    // todo: build the object with the necessary fields,
     for {
       basicEventInformation <- getBasicEventInformation
       resources             <- slickResourceRepository.getAllResourcesBy(id)
@@ -97,7 +96,7 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
       resources  <- slickResourceRepository.getAllResourcesBy(id)
       event      <- getBy(id)
       attendants <- slickAttendantRepository.getAttendantsBy(id)
-    } yield EventSummary(event.name, resources.toList, attendants)
+    } yield EventSummary(event.name, parse(event.insertionDate) , resources.toList, attendants)
   }
 
   override def getResourceBy(resourceId: Int): Future[Resource] = {

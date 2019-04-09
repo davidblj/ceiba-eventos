@@ -1,6 +1,6 @@
 package infrastructure.slick.repositories
 
-import domain.models.Resource
+import domain.entities.Resource
 import domain.value_objects.ResourceSharedAmount
 import infrastructure.slick.entities.{ResourceTable, Resource => ResourceTableObject}
 import infrastructure.slick.transformers.ResourceTransformer

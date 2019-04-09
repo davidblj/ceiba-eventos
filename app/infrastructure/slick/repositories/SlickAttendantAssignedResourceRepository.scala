@@ -1,6 +1,6 @@
 package infrastructure.slick.repositories
 
-import domain.models.AttendantAssignedResource
+import domain.entities.AttendantAssignedResource
 import infrastructure.slick.entities
 import infrastructure.slick.entities.{AttendantAssignedResourceTable, ResourceTable}
 import infrastructure.slick.transformers.AttendantAssignedResourceTransformer
@@ -36,7 +36,7 @@ class SlickAttendantAssignedResourceRepository @Inject() (val dbConfigProvider: 
     ))
   }
 
-  def getBy(attendantId: Int): Future[Seq[AttendantAssignedResource]] = {
+  def getByAttendantIdAndEventId(attendantId: Int): Future[Seq[AttendantAssignedResource]] = {
 
     val query = attendantAssignedResourceTable join resourceTable on (_.resource_id === _.id)
     db.run(query.result)

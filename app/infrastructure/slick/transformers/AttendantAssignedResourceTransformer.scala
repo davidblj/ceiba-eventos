@@ -1,6 +1,6 @@
 package infrastructure.slick.transformers
 
-import domain.models.AttendantAssignedResource
+import domain.entities.AttendantAssignedResource
 import infrastructure.slick.entities.{AttendantAssignedResource => AttendantAssignedResourceTableObject}
 
 object AttendantAssignedResourceTransformer {

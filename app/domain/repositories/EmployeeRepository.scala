@@ -1,6 +1,6 @@
 package domain.repositories
 
-import domain.models.Employee
+import domain.entities.Employee
 
 import scala.concurrent.Future
 

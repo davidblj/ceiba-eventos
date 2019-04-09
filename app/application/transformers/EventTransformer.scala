@@ -1,8 +1,8 @@
 package application.transformers
 
-import domain.models.Event
-import domain.models.Input
-import domain.models.Resource
+import domain.entities.Event
+import domain.entities.Input
+import domain.entities.Resource
 import application.transfer_objects.{Event => EventAppObject}
 
 object EventTransformer {
@@ -16,6 +16,6 @@ object EventTransformer {
         Some(event.inputs.get.map(input => Input(input.name, input.price, input.description)))
       } else None
 
-    Event(event.name, domainResourcesObject, event.favoriteResource, event.description, domainInputsObject)
+    Event(event.name, null, domainResourcesObject, event.favoriteResource, event.description, domainInputsObject)
   }
 }

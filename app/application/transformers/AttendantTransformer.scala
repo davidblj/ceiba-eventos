@@ -1,7 +1,7 @@
 package application.transformers
 
 import application.transfer_objects.{Attendant => AttendantAppObject}
-import domain.models.{Attendant, AttendantAssignedResource}
+import domain.entities.{Attendant, AttendantAssignedResource}
 
 object AttendantTransformer {
 
@@ -12,6 +12,6 @@ object AttendantTransformer {
     })
 
     Attendant(attendant.eventId, None, attendant.employeeId, None, attendant.locationId,
-              domainAttendantAssignedResourceObject, None)
+              domainAttendantAssignedResourceObject, None, None)
   }
 }

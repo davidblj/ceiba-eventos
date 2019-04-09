@@ -1,6 +1,6 @@
 package infrastructure.slick.repositories
 
-import domain.models.Employee
+import domain.entities.Employee
 import domain.repositories.EmployeeRepository
 import infrastructure.slick.entities.EmployeeTable
 import infrastructure.slick.transformers.EmployeeTransformer

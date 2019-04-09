@@ -1,4 +1,4 @@
-package domain.models
+package domain.entities
 
 case class Resource (name: String,
                      price: Float,

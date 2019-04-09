@@ -1,6 +1,9 @@
-package domain.models
+package domain.entities
+
+import org.joda.time.DateTime
 
 case class Event(name: String,
+                 insertionDate: DateTime,
                  resources: List[Resource],
                  favoriteResource: Option[String] = None,
                  description: Option[String] = None,
@@ -10,7 +13,7 @@ case class Event(name: String,
   require(checkFavoriteResource(), "favorite_resource must match a resource name in the resource item list")
 
   def setId(id: Int): Event = {
-    Event(name, resources, description, favoriteResource, inputs, Some(id))
+    Event(name, insertionDate, resources, description, favoriteResource, inputs, Some(id))
   }
 
   // utils

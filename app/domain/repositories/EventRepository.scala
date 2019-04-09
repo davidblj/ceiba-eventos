@@ -1,7 +1,7 @@
 package domain.repositories
 
 import domain.value_objects.{Location, ResourceSharedAmount}
-import domain.models.{Attendant, Event, EventSummary, Resource}
+import domain.entities.{Attendant, Event, EventSummary, Resource}
 
 import scala.concurrent.Future
 

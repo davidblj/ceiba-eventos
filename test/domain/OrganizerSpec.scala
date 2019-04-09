@@ -1,6 +1,6 @@
 package domain
 
-import domain.models.{Event, Resource}
+import domain.entities.{Event, Resource}
 import domain.core.Organizer
 import builders.EventBuilder
 import domain.repositories.{EmployeeRepository, EventRepository, LocationRepository}

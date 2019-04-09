@@ -1,6 +1,6 @@
 package domain.core
 
-import domain.models._
+import domain.entities._
 import domain.repositories.{EmployeeRepository, EventRepository, LocationRepository}
 import domain.value_objects.{EventResources, Fail, Location, ResourceSharedAmount}
 import javax.inject.Inject
@@ -56,7 +56,7 @@ class Organizer @Inject() (eventRepository: EventRepository, locationRepository:
 
       if (newSharedResourceAmountIsIllegal) {
         Left(Fail(s"This resource available stock is $availableStock, " +
-                  s"and ${resourceSharedAmount.amount} already surpasses that amount."))
+                  s"and ${resourceSharedAmount.amount} surpasses that amount."))
       } else {
         Right(Unit)
       }

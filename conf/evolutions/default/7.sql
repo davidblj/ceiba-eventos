@@ -4,7 +4,9 @@
 # --- !Ups
 
 CREATE TABLE attendant (
+
     id INT AUTO_INCREMENT PRIMARY KEY,
+    insertion_date DATETIME,
 
     event_id INT,
     FOREIGN KEY (event_id) REFERENCES event(id),

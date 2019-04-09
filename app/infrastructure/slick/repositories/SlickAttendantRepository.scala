@@ -1,15 +1,16 @@
 package infrastructure.slick.repositories
 
-import domain.models.{Attendant, AttendantAssignedResource, Resource}
+import domain.entities.{Attendant, AttendantAssignedResource}
 import infrastructure.slick.entities
 import infrastructure.slick.entities._
 import infrastructure.slick.transformers._
 import javax.inject.Inject
+import infrastructure.slick.shared.CustomColumnTypes._
+import org.joda.time.DateTime
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.jdbc.JdbcProfile
-import slick.lifted.QueryBase
+import infrastructure.slick.shared.CustomTypesTransformers.parse
 
-import scala.collection.immutable
 import scala.concurrent.{ExecutionContext, Future}
 
 class SlickAttendantRepository @Inject() (val dbConfigProvider: DatabaseConfigProvider,
@@ -42,7 +43,7 @@ class SlickAttendantRepository @Inject() (val dbConfigProvider: DatabaseConfigPr
 
   def getAttendantsBy(eventId: Int): Future[List[Attendant]] = {
 
-    def fetchAttendants(): Future[List[(Int, String, Int, String, Int, Int)]] = {
+    def fetchAttendants(): Future[List[(Int, String, Int, String, Int, Int, DateTime)]] = {
 
       db.run(flat(attendantsQuery()).result)
         .map(attendants => attendants.toList)
@@ -60,33 +61,36 @@ class SlickAttendantRepository @Inject() (val dbConfigProvider: DatabaseConfigPr
             ((entities.Attendant, Location), Employee), Seq]) = {
 
       query map { case ((attendant, location), employee) =>
-        (eventId, employee.fullName, employee.id, location.name, location.id, attendant.id)
+        (eventId, employee.fullName, employee.id, location.name, location.id, attendant.id,  attendant.insertionDate)
       }
     }
 
-    def attendantsIdsIn(tuples: List[(Int, String, Int, String, Int, Int)]) = {
+    def attendantsIdsIn(tuples: List[(Int, String, Int, String, Int, Int, DateTime)]): List[Int] = {
       tuples.map(tuple => tuple._6)
     }
 
-    def getResourcesFrom(attendantsIds: List[Int]): Future[List[List[AttendantAssignedResource]]] = {
+    def getResourcesFrom(attendantsIds: List[Int]): Future[List[Seq[AttendantAssignedResource]]] = {
 
-      val resourcesPerAttendant = attendantsIds
-        .map(attendantId => attendantAssignedResourceRepository.getAllBy(attendantId))
+      val resourcesPerAttendant = attendantsIds.map(attendantId =>
+        attendantAssignedResourceRepository.getByAttendantIdAndEventId(attendantId)
+      )
+
       Future.sequence(resourcesPerAttendant)
     }
 
-    def mergeAttendantsWithResources(attendants: List[(Int, String, Int, String, Int, Int)],
-                                     resources: List[List[AttendantAssignedResource]])
-                                     : Future[List[(Int, String, Int, String, Int, Int, List[AttendantAssignedResource])]] = {
+    def mergeAttendantsWithResources(attendants: List[(Int, String, Int, String, Int, Int, DateTime)],
+                                     resources: List[Seq[AttendantAssignedResource]])
+                                     : Future[List[(Int, String, Int, String, Int, Int, Seq[AttendantAssignedResource], DateTime)]] = {
 
       Future.successful(attendants zip resources map {
         case (attendant, attendantResources) => (attendant._1, attendant._2, attendant._3, attendant._4, attendant._5,
-                                                 attendant._6, attendantResources)
+                                                 attendant._6, attendantResources, attendant._7)
       })
     }
 
-    def map(tuple: (Int, String, Int, String, Int, Int, List[AttendantAssignedResource])): Attendant = {
-      Attendant(tuple._1, Some(tuple._2), tuple._3, Some(tuple._4), tuple._5, tuple._7, Some(tuple._6))
+    def map(tuple: (Int, String, Int, String, Int, Int, Seq[AttendantAssignedResource], DateTime)): Attendant = {
+      Attendant(tuple._1, Some(tuple._2), tuple._3, Some(tuple._4), tuple._5, tuple._7.toList, Some(tuple._6),
+                Some(parse(tuple._8)))
     }
 
     for {

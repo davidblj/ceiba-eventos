@@ -1,6 +1,6 @@
 package infrastructure.slick.transformers
 
-import domain.models.{Event, Resource}
+import domain.entities.{Event, Resource}
 import infrastructure.slick.entities.{Event => EventTableObject}
 
 object EventTransformer {
@@ -10,6 +10,7 @@ object EventTransformer {
   }
 
   def toDomainObject(event: EventTableObject, resources: Seq[Resource]): Event = {
-    Event(event.name, resources.toList, event.favoriteResource, event.favoriteResource, null, Some(event.id))
+    Event(event.name, event.insertionDate, resources.toList, event.favoriteResource, event.favoriteResource, null,
+          Some(event.id))
   }
 }

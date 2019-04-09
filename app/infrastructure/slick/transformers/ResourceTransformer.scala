@@ -1,6 +1,6 @@
 package infrastructure.slick.transformers
 
-import domain.models.Resource
+import domain.entities.Resource
 import infrastructure.slick.entities.{Resource => ResourceTableObject}
 
 object ResourceTransformer {

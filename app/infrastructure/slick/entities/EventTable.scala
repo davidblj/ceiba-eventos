@@ -1,8 +1,11 @@
 package infrastructure.slick.entities
 
+import org.joda.time.DateTime
 import slick.jdbc.MySQLProfile.api._
+import infrastructure.slick.shared.CustomColumnTypes._
 
-case class Event(id: Int = 0, name: String, description: Option[String] = None, favoriteResource: Option[String] = None)
+case class Event(id: Int = 0, insertionDate: DateTime = DateTime.now(), name: String, description: Option[String] = None,
+                 favoriteResource: Option[String] = None)
 
 class EventTable(tag: Tag) extends Table[Event](tag, "event"){
 
@@ -10,9 +13,10 @@ class EventTable(tag: Tag) extends Table[Event](tag, "event"){
   def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
 
   // Fields
+  def insertionDate = column[DateTime]("insertion_date")
   def name = column[String]("name")
   def description = column[Option[String]]("description")
   def favoriteResource = column[Option[String]]("favorite_resource")
 
-  def * = (id, name, description, favoriteResource) <> (Event.tupled, Event.unapply)
+  def * = (id, insertionDate, name, description, favoriteResource) <> (Event.tupled, Event.unapply)
 }

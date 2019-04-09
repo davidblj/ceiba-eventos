@@ -1,5 +1,5 @@
 package application.transfer_objects
 
-import domain.models.{Employee => EmployeeDomainObject}
+import domain.entities.{Employee => EmployeeDomainObject}
 
 case class Employees(employees: List[EmployeeDomainObject])
