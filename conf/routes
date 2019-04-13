@@ -1,8 +1,11 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 
+# session controller
+POST       /session                 controllers.SessionController.authenticate
+
 # location actions
-GET       /events/locations           controllers.LocationController.getAllLocations
-POST      /events/locations           controllers.LocationController.addEventLocation
+GET       /events/locations         controllers.LocationController.getAllLocations
+POST      /events/locations         controllers.LocationController.addEventLocation
 
 # event actions
 POST    /events                     controllers.EventController.createEvent

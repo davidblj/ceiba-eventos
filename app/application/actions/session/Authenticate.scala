@@ -1,11 +1,11 @@
 package application.actions.session
 
-import com.google.inject.Inject
 import domain.core.Session
 import domain.value_objects.{Credentials, Fail, User}
+import javax.inject.Inject
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class Authenticate @Inject() (session: Session){
 

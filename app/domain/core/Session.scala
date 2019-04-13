@@ -1,8 +1,8 @@
 package domain.core
 
-import com.google.inject.Inject
 import domain.services.Authentication
 import domain.value_objects.{Credentials, User}
+import javax.inject.Inject
 
 import scala.concurrent.Future
 
