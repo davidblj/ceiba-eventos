@@ -27,6 +27,10 @@ class Organizer @Inject() (eventRepository: EventRepository, locationRepository:
     locationRepository.getAll
   }
 
+  def getAllEventsWithSimpleSignatureBy(finishedStatus: Boolean): Future[List[Event]] =  {
+    eventRepository.getAllAndSimplifyBy(finishedStatus)
+  }
+
   def lookUpResourcesBy(eventId: Int): Future[EventResources] = {
     eventRepository.getBy(eventId)
                    .map(event => EventResources(event.favoriteResource, event.resources))

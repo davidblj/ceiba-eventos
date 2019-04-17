@@ -7,7 +7,8 @@ CREATE TABLE event (
     insertion_date DATETIME,
     name CHAR(30),
     description CHAR(150),
-    favorite_resource CHAR(30)
+    favorite_resource CHAR(30),
+    finished BOOLEAN
 );
 
 # --- !Downs

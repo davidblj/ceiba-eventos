@@ -1,6 +1,6 @@
 package infrastructure.play.json.writes
 
-import domain.entities.{Attendant, AttendantAssignedResource, EventSummary, Resource}
+import domain.entities._
 import play.api.libs.json.{Json, OWrites}
 
 object EventSummaryWrites {

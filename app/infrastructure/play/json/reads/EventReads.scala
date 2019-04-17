@@ -1,6 +1,6 @@
 package infrastructure.play.json.reads
 
-import application.transfer_objects.{Event, Input, Resource}
+import application.transfer_objects.{IncomingEvent, Input, Resource}
 import play.api.libs.json._
 import play.api.libs.json.Reads._
 import play.api.libs.functional.syntax._
@@ -20,13 +20,13 @@ object EventReads {
     (JsPath \ "description").readNullable[String](minLength[String](10) keepAnd maxLength[String](100))
     )(Input.apply _)
 
-  implicit val eventReads: Reads[Event] = (
+  implicit val eventReads: Reads[IncomingEvent] = (
     (JsPath \ "name").read[String](minLength[String](3) keepAnd maxLength[String](24)) and
     (JsPath \ "resources").read[List[Resource]](minLength[List[Resource]](1)) and
     (JsPath \ "favorite_resource").readNullable[String] and
     (JsPath \ "description").readNullable[String](minLength[String](10) keepAnd maxLength[String](100)) and
     (JsPath \ "inputs").readNullable[List[Input]]
-    )(Event.apply _)
+    )(IncomingEvent.apply _)
 
   private def isFloatPositive(i: Float) = i > 0
   private def isIntPositive(i: Int) = i > 0

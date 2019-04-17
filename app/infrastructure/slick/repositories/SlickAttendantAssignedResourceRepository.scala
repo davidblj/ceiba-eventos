@@ -1,7 +1,6 @@
 package infrastructure.slick.repositories
 
 import domain.entities.AttendantAssignedResource
-import infrastructure.slick.entities
 import infrastructure.slick.entities.{AttendantAssignedResourceTable, ResourceTable}
 import infrastructure.slick.transformers.AttendantAssignedResourceTransformer
 import javax.inject.Inject

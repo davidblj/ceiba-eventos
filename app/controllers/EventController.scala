@@ -1,25 +1,26 @@
 package controllers
 
-import application.actions.events.{CreateEvent, GetEvent}
-import application.transfer_objects.Event
+import application.actions.events.{CreateEvent, GetAllEventsWithSimpleSignature, GetEventSummary}
+import application.transfer_objects.IncomingEvent
 import domain.value_objects.Fail
-import infrastructure.play.json.reads.EventReads._
-import javax.inject._
-import play.api.mvc._
 import infrastructure.play.json.Validator
-import infrastructure.play.json.writes.FailWrites.failWrites
+import infrastructure.play.json.reads.EventReads._
 import infrastructure.play.json.writes.EventSummaryWrites.eventSummaryWrites
+import infrastructure.play.json.writes.EventsWithSimpleSignatureWrites.eventWrites
+import infrastructure.play.json.writes.FailWrites.failWrites
+import javax.inject._
 import play.api.libs.json.Json
+import play.api.mvc._
 
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class EventController @Inject()(cc: ControllerComponents, CreateEvent: CreateEvent, GetEvent: GetEvent,
-                                validator: Validator)
+class EventController @Inject()(cc: ControllerComponents, CreateEvent: CreateEvent, GetEvent: GetEventSummary,
+                                GetEventsWithSimpleSignature: GetAllEventsWithSimpleSignature, validator: Validator)
                                (implicit ec: ExecutionContext)
                                 extends AbstractController(cc) {
 
-  def createEvent(): Action[Event] = Action.async(validator.validateJson[Event]) {
+  def createEvent(): Action[IncomingEvent] = Action.async(validator.validateJson[IncomingEvent]) {
     request => {
 
       val event = request.body
@@ -31,11 +32,21 @@ class EventController @Inject()(cc: ControllerComponents, CreateEvent: CreateEve
     }
   }
 
-  def getEvent(eventId: Int): Action[AnyContent] = Action.async {
+  def getEventBy(id: Int): Action[AnyContent] = Action.async {
     _ => {
 
-      GetEvent.execute(eventId).map(eventSummary => {
+      GetEvent.execute(id).map(eventSummary => {
         Ok(Json.toJson(eventSummary))
+      })
+    }
+  }
+
+  def getEventsWithSimpleSignatureBy(status: Int): Action[AnyContent] = Action.async {
+    _ => {
+
+      val eventStatus = if (status == 1 ) true else false
+      GetEventsWithSimpleSignature.execute(eventStatus).map(events => {
+        Ok(Json.toJson(events))
       })
     }
   }

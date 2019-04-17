@@ -3,7 +3,8 @@ package application.transformers
 import domain.entities.Event
 import domain.entities.Input
 import domain.entities.Resource
-import application.transfer_objects.{Event => EventAppObject}
+import application.transfer_objects.{OutcomingEvent, IncomingEvent => EventAppObject}
+import infrastructure.slick.shared.CustomTypesTransformers.parse
 
 object EventTransformer {
 
@@ -17,5 +18,9 @@ object EventTransformer {
       } else None
 
     Event(event.name, null, domainResourcesObject, event.favoriteResource, event.description, domainInputsObject)
+  }
+
+  def domainObjectListToApplicationObjectList(events: List[Event]): List[OutcomingEvent] = {
+    events.map(event => OutcomingEvent(event.name, parse(event.insertionDate), event.eventId.get,  event.status))
   }
 }

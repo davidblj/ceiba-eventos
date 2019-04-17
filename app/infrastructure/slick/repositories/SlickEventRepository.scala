@@ -87,7 +87,12 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
     for {
       basicEventInformation <- getBasicEventInformation
       resources             <- slickResourceRepository.getAllResourcesBy(id)
-    } yield EventTransformer.toDomainObject(basicEventInformation, resources)
+    } yield EventTransformer.toSimpleDomainObject(basicEventInformation, Some(resources), None)
+  }
+
+  override def getAllAndSimplifyBy(finishedStatus: Boolean): Future[List[Event]] = {
+    val query = eventTable.filter(_.finished === finishedStatus).result
+    db.run(query).map(events => EventTransformer.toSimpleDomainObjectList(events))
   }
 
   override def getSummaryBy(id: Int): Future[EventSummary] = {

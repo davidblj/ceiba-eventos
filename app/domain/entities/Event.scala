@@ -8,7 +8,8 @@ case class Event(name: String,
                  favoriteResource: Option[String] = None,
                  description: Option[String] = None,
                  inputs: Option[List[Input]] = None,
-                 eventId: Option[Int] = None) {
+                 eventId: Option[Int] = None,
+                 status: Boolean = false) {
 
   require(checkFavoriteResource(), "favorite_resource must match a resource name in the resource item list")
 

@@ -7,7 +7,7 @@ import infrastructure.play.json.reads.CredentialsReads._
 import infrastructure.play.json.writes.FailWrites._
 import infrastructure.play.json.writes.UserWrites._
 import javax.inject.Inject
-import pdi.jwt.{Jwt, JwtAlgorithm, JwtJson}
+import pdi.jwt.{JwtAlgorithm, JwtJson}
 import play.api.Configuration
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -15,7 +15,7 @@ import play.api.mvc._
 import scala.concurrent.ExecutionContext
 
 class SessionController @Inject() (cc: ControllerComponents, Authenticate: Authenticate, validator: Validator,
-                                   playconfiguration: Configuration)
+                                   playConfiguration: Configuration)
                                   (implicit ec: ExecutionContext)
                                    extends AbstractController(cc) {
 
@@ -36,7 +36,7 @@ class SessionController @Inject() (cc: ControllerComponents, Authenticate: Authe
 
   def generateToken(user: User): String = {
 
-    val key = playconfiguration.underlying.getString("play.jwt.secret")
+    val key = playConfiguration.underlying.getString("play.jwt.secret")
     val payload = Json.obj(("username", user.username))
     val algorithm = JwtAlgorithm.HS256
 

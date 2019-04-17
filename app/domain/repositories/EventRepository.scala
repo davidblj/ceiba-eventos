@@ -7,6 +7,7 @@ import scala.concurrent.Future
 
 trait EventRepository {
   def getBy(id: Int): Future[Event]
+  def getAllAndSimplifyBy(finishedStatus: Boolean): Future[List[Event]]
   def getSummaryBy(id: Int): Future[EventSummary]
   def getResourceBy(resourceId: Int): Future[Resource]
   def add(event: Event): Future[Int]

@@ -1,6 +1,6 @@
 package application.actions.events
 
-import application.transfer_objects.{Event => EventTransferObject}
+import application.transfer_objects.{IncomingEvent => EventTransferObject}
 import application.transformers.EventTransformer
 import domain.core.Organizer
 import javax.inject.Inject
