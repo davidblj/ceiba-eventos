@@ -11,6 +11,7 @@ POST      /events/locations         controllers.LocationController.addEventLocat
 POST    /events                     controllers.EventController.createEvent
 GET     /events                     controllers.EventController.getEventsWithSimpleSignatureBy(status: Int ?= 1)
 GET     /events/:id                 controllers.EventController.getEventBy(id: Int)
+POST    /events/:id/status          controllers.EventController.updateEventStatusBy(id: Int)
 
 # resource actions
 GET     /events/:id/resources                                                controllers.ResourcesController.getAllResources(id: Int)

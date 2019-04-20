@@ -17,6 +17,22 @@ class Organizer @Inject() (eventRepository: EventRepository, locationRepository:
     eventRepository.add(event)
   }
 
+  def sealEventBy(eventId: Int): Future[None.type] = {
+
+    def check(changedRowsInDB: Int): Future[None.type] = {
+
+      if (changedRowsInDB > 0)
+        Future.successful(None)
+      else
+        Future.failed(new Exception(s"Event with id \'$eventId\' could not be updated, do make sure that exists"))
+    }
+
+    for {
+      changedRows       <- eventRepository.updateFinishedStatusIn(eventId)
+      operationResult   <- check(changedRows)
+    } yield operationResult
+  }
+
   def subscribe(location: Location): Future[Int] = {
     // todo: handle a non existent event id (get event by id, -in the repo-)
     eventRepository.add(location)

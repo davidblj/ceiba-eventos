@@ -95,6 +95,14 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
     db.run(query).map(events => EventTransformer.toSimpleDomainObjectList(events))
   }
 
+  override def updateFinishedStatusIn(eventId: Int): Future[Int] = {
+
+    val query = eventTable.filter(_.id === eventId)
+                          .map(_.finished)
+    val updateQuery = query.update(true)
+    db.run(updateQuery)
+  }
+
   override def getSummaryBy(id: Int): Future[EventSummary] = {
 
     for {
