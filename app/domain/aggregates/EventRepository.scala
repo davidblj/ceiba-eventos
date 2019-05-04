@@ -1,4 +1,4 @@
-package domain.repositories
+package domain.aggregates
 
 import domain.value_objects.{Location, ResourceSharedAmount}
 import domain.entities.{Attendant, Event, EventSummary, Resource}

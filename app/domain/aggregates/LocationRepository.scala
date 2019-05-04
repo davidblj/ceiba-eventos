@@ -1,4 +1,4 @@
-package domain.repositories
+package domain.aggregates
 
 import scala.concurrent.Future
 

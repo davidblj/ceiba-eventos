@@ -3,7 +3,7 @@ package domain
 import domain.entities.{Event, Resource}
 import domain.services.Organizer
 import builders.EventBuilder
-import domain.repositories.{EmployeeRepository, EventRepository, LocationRepository}
+import domain.aggregates.{EmployeeRepository, EventRepository, LocationRepository}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.mockito.Mockito._

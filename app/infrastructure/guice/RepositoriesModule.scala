@@ -1,7 +1,7 @@
 package infrastructure.guice
 
 import com.google.inject.AbstractModule
-import domain.repositories.{EmployeeRepository, EventRepository, LocationRepository}
+import domain.aggregates.{EmployeeRepository, EventRepository, LocationRepository}
 import domain.external_services.Authentication
 import infrastructure.ldap.LdapAuthentication
 import infrastructure.slick.repositories.{SlickEmployeeRepository, SlickEventRepository, SlickLocationRepository, SlickResourceRepository}

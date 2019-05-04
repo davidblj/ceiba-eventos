@@ -1,7 +1,7 @@
 package infrastructure.slick.repositories
 
 import domain.entities.Employee
-import domain.repositories.EmployeeRepository
+import domain.aggregates.EmployeeRepository
 import infrastructure.slick.entities.EmployeeTable
 import infrastructure.slick.transformers.EmployeeTransformer
 import javax.inject.Inject

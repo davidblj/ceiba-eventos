@@ -1,7 +1,7 @@
 package domain.services
 
 import domain.entities._
-import domain.repositories.{EmployeeRepository, EventRepository, LocationRepository}
+import domain.aggregates.{EmployeeRepository, EventRepository, LocationRepository}
 import domain.value_objects.{EventResources, Fail, Location, ResourceSharedAmount}
 import javax.inject.Inject
 

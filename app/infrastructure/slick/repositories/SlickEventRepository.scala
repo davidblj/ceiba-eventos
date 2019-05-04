@@ -1,7 +1,7 @@
 package infrastructure.slick.repositories
 
 import domain.entities.{Attendant, Event, EventSummary, Input, Resource}
-import domain.repositories.EventRepository
+import domain.aggregates.EventRepository
 import domain.value_objects.{Location, ResourceSharedAmount}
 import infrastructure.slick.entities
 import infrastructure.slick.entities._
