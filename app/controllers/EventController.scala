@@ -33,7 +33,7 @@ class EventController @Inject()(cc: ControllerComponents, CreateEvent: CreateEve
     }
   }
 
-  def getEventBy(id: Int): Action[AnyContent] = Action.async {
+  def getEventSummaryBy(id: Int): Action[AnyContent] = Action.async {
     _ => {
 
       GetEvent.execute(id).map(eventSummary => {

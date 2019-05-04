@@ -1,6 +1,6 @@
 package infrastructure.ldap
 
-import domain.services.Authentication
+import domain.external_services.Authentication
 import domain.value_objects.{Credentials, User}
 
 import scala.concurrent.Future

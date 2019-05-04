@@ -1,4 +1,4 @@
-package domain.services
+package domain.external_services
 
 import domain.value_objects.{Credentials, User}
 

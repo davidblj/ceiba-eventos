@@ -1,6 +1,6 @@
 package application.actions.session
 
-import domain.core.Session
+import domain.services.Session
 import domain.value_objects.{Credentials, Fail, User}
 import javax.inject.Inject
 

@@ -1,6 +1,6 @@
 package application.actions.events
 
-import domain.core.Organizer
+import domain.services.Organizer
 import domain.entities.EventSummary
 import javax.inject.Inject
 

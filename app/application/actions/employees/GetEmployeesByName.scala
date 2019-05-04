@@ -1,7 +1,7 @@
 package application.actions.employees
 
 import application.transfer_objects.Employees
-import domain.core.Organizer
+import domain.services.Organizer
 import javax.inject.Inject
 
 import scala.concurrent.Future

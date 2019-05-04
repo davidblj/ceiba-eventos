@@ -1,6 +1,6 @@
-package domain.core
+package domain.services
 
-import domain.services.Authentication
+import domain.external_services.Authentication
 import domain.value_objects.{Credentials, User}
 import javax.inject.Inject
 

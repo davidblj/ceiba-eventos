@@ -1,4 +1,4 @@
-package domain.core
+package domain.services
 
 import domain.entities._
 import domain.repositories.{EmployeeRepository, EventRepository, LocationRepository}

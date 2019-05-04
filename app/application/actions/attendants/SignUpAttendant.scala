@@ -1,7 +1,7 @@
 package application.actions.attendants
 
 import application.transfer_objects.Attendant
-import domain.core.Organizer
+import domain.services.Organizer
 import application.transformers.AttendantTransformer
 import javax.inject.Inject
 

@@ -109,7 +109,7 @@ class SlickEventRepository @Inject() (val dbConfigProvider: DatabaseConfigProvid
       resources  <- slickResourceRepository.getAllResourcesBy(id)
       event      <- getBy(id)
       attendants <- slickAttendantRepository.getAttendantsBy(id)
-    } yield EventSummary(event.name, parse(event.insertionDate) , resources.toList, attendants)
+    } yield EventSummary(event.eventId.get, event.name, parse(event.insertionDate), resources.toList, attendants)
   }
 
   override def getResourceBy(resourceId: Int): Future[Resource] = {
